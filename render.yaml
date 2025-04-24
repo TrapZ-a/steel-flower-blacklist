@@ -1,1 +1,2 @@
-
+build:
+  preInstallCommand: pip install --upgrade pip
