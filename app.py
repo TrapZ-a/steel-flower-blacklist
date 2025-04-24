@@ -11,7 +11,7 @@ BLACKLIST_FILE = os.path.join(DATA_DIR, 'blacklist.xlsx')
 
 def process_blacklist():
     try:
-        df = pd.read_excel('data/blacklist.xlsx', sheet_name='Sheet1', engine='openpyxl')
+        df = pd.read_excel('Data/blacklist.xlsx', sheet_name='Sheet1', engine='openpyxl')
         return df.rename(columns={
             'In-Game Name': 'ign',
             'Player ID': 'game_id',
