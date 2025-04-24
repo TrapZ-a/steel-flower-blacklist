@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Configuration
-DATA_DIR = 'data'
+DATA_DIR = 'Data'
 BLACKLIST_FILE = os.path.join(DATA_DIR, 'blacklist.xlsx')
 
 def process_blacklist():
