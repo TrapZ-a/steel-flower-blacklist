@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Steel Flower Blacklist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Added search box styling */
+        .search-box {
+            max-width: 500px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 2px solid #FFD700;
+            background: rgba(20, 20, 20, 0.9);
+            color: white;
+        }
+
+        .no-results td {
+            text-align: center;
+            padding: 20px;
+            color: #FFD700;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>STEEL FLOWER</h1>
+        
+        <div class="description">
+            <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by IGN, Game ID, or Reason...">
+        </div>
+
+        <table id="blacklistTable">
+            <thead>
+                <tr>
+                    <th>IGN</th>
+                    <th>GAME ID</th>
+                    <th>REASON</th>
+                    <th>STATUS</th>
+                    <th>DATE ADDED</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <!-- Player Detail Modal -->
+        <div id="playerModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="profile-header">
+                    <h2 id="modalIGN"></h2>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Discord ID</span>
+                        <span id="discordID" class="detail-value"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Game ID</span>
+                        <span id="modalGameID" class="detail-value"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span id="modalStatus" class="detail-value"></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Date Added</span>
+                        <span id="modalDate" class="detail-value"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Date formatting options
+        const dateOptions = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        };
+
+        let originalData = []; // Store original data
+
+        function updateTable(data) {
+            const tbody = document.querySelector('#blacklistTable tbody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr class="no-results"><td colspan="5">No matching records found</td></tr>`;
+                return;
+            }
+
+            data.forEach(entry => {
+                const row = document.createElement('tr');
+                const formattedStatus = entry.status.charAt(0).toUpperCase() + entry.status.slice(1).toLowerCase();
+                const formattedDate = new Date(entry.date_added).toLocaleDateString('en-GB', dateOptions);
+
+                row.innerHTML = `
+                    <td>${entry.ign}</td>
+                    <td>${entry.game_id}</td>
+                    <td>${entry.reason}</td>
+                    <td class="status-${formattedStatus.toLowerCase()}">${formattedStatus}</td>
+                    <td>${formattedDate}</td>
+                `;
+                row.addEventListener('click', () => showPlayerDetails(entry));
+                tbody.appendChild(row);
+            });
+        }
+
+        function showPlayerDetails(player) {
+            const modal = document.getElementById('playerModal');
+            modal.style.display = 'block';
+            
+            document.getElementById('modalIGN').textContent = player.ign;
+            document.getElementById('discordID').textContent = player.discord_id;
+            document.getElementById('modalGameID').textContent = player.game_id;
+            document.getElementById('modalStatus').textContent = player.status;
+            document.getElementById('modalDate').textContent = 
+                new Date(player.date_added).toLocaleDateString('en-GB', dateOptions);
+        }
+
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('playerModal').style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('playerModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            
+            if (!filter) {
+                updateTable(originalData);
+                return;
+            }
+
+            const filteredData = originalData.filter(entry => {
+                return Object.values(entry).some(value => 
+                    String(value).toLowerCase().includes(filter)
+                );
+            });
+
+            updateTable(filteredData);
+        });
+
+        fetch('/api/blacklist')
+            .then(response => response.json())
+            .then(data => {
+                originalData = data.data;
+                updateTable(originalData);
+            });
+    </script>
+</body>
+</html>
