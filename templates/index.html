@@ -1,83 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Steel Flower Blacklist</title>
+    <title>Steel Flower</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        /* Added search box styling */
-        .search-box {
-            max-width: 500px;
-            margin: 20px auto;
-            position: relative;
-        }
-
-        #searchInput {
-            width: 100%;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 25px;
-            border: 2px solid #FFD700;
-            background: rgba(20, 20, 20, 0.9);
-            color: white;
-        }
-
-        .no-results td {
-            text-align: center;
-            padding: 20px;
-            color: #FFD700;
-            font-style: italic;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>STEEL FLOWER</h1>
-        
-        <div class="description">
-            <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
+        <div class="nav-container">
+            <button class="nav-button" onclick="showSection('home')">Home</button>
+            <button class="nav-button" onclick="showSection('blacklist')">Blacklist</button>
         </div>
 
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search by IGN, Game ID, or Reason...">
+        <!-- Home Section -->
+        <div id="home-section" class="home-content">
+            <h1>Welcome to Steel Flower</h1>
+            
+            <div class="description">
+                <p>Welcome to Steel Flower Tournaments. We are a Critical Ops tournament organization that aims to bring the best experience to the Critical Ops Competitive Scene.</p>
+            </div>
+
+            <div class="social-container">
+                <a href="https://discord.gg/encdzGBrND" target="_blank" class="social-button">
+                    <i class="fab fa-discord social-icon"></i>
+                    <h3>Discord Server</h3>
+                    <p>Join our community</p>
+                </a>
+                
+                <a href="https://www.twitter.com/SteelFlowerGG" target="_blank" class="social-button">
+                    <i class="fab fa-twitter social-icon"></i>
+                    <h3>Twitter</h3>
+                    <p>Follow our updates</p>
+                </a>
+                
+                <a href="https://www.youtube.com/@SteelFlower" target="_blank" class="social-button">
+                    <i class="fab fa-youtube social-icon"></i>
+                    <h3>YouTube</h3>
+                    <p>Watch our content</p>
+                </a>
+            </div>
         </div>
 
-        <table id="blacklistTable">
-            <thead>
-                <tr>
-                    <th>IGN</th>
-                    <th>GAME ID</th>
-                    <th>REASON</th>
-                    <th>STATUS</th>
-                    <th>DATE ADDED</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <!-- Blacklist Section -->
+        <div id="blacklist-section" class="section-hidden">
+            <h1>STEEL FLOWER</h1>
+            
+            <div class="description">
+                <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
+            </div>
 
-        <!-- Player Detail Modal -->
-        <div id="playerModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div class="profile-header">
-                    <h2 id="modalIGN"></h2>
-                </div>
-                <div class="profile-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Discord ID</span>
-                        <span id="discordID" class="detail-value"></span>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by IGN, Game ID, or Reason...">
+            </div>
+
+            <table id="blacklistTable">
+                <thead>
+                    <tr>
+                        <th>IGN</th>
+                        <th>GAME ID</th>
+                        <th>REASON</th>
+                        <th>STATUS</th>
+                        <th>DATE ADDED</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <!-- Player Detail Modal -->
+            <div id="playerModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="profile-header">
+                        <h2 id="modalIGN"></h2>
                     </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Game ID</span>
-                        <span id="modalGameID" class="detail-value"></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Status</span>
-                        <span id="modalStatus" class="detail-value"></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Date Added</span>
-                        <span id="modalDate" class="detail-value"></span>
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Discord ID</span>
+                            <span id="discordID" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Game ID</span>
+                            <span id="modalGameID" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span id="modalStatus" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Date Added</span>
+                            <span id="modalDate" class="detail-value"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -85,14 +99,29 @@
     </div>
 
     <script>
-        // Date formatting options
+        // Navigation functionality
+        function showSection(sectionId) {
+            document.getElementById('home-section').classList.toggle('section-hidden', sectionId !== 'home');
+            document.getElementById('blacklist-section').classList.toggle('section-hidden', sectionId !== 'blacklist');
+            
+            if(sectionId === 'blacklist' && originalData.length === 0) {
+                fetch('/api/blacklist')
+                    .then(response => response.json())
+                    .then(data => {
+                        originalData = data.data;
+                        updateTable(originalData);
+                    });
+            }
+        }
+
+        // Original Blacklist Functionality
         const dateOptions = {
             year: 'numeric',
             month: 'short',
             day: 'numeric'
         };
 
-        let originalData = []; // Store original data
+        let originalData = [];
 
         function updateTable(data) {
             const tbody = document.querySelector('#blacklistTable tbody');
@@ -160,12 +189,8 @@
             updateTable(filteredData);
         });
 
-        fetch('/api/blacklist')
-            .then(response => response.json())
-            .then(data => {
-                originalData = data.data;
-                updateTable(originalData);
-            });
+        // Show home page by default
+        showSection('home');
     </script>
 </body>
 </html>
