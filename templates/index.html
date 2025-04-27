@@ -4,13 +4,15 @@
     <title>Steel Flower</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <div class="nav-container">
             <button class="nav-button" onclick="showSection('home')">Home</button>
             <button class="nav-button" onclick="showSection('blacklist')">Blacklist</button>
+            <button class="nav-button dimmed" onclick="showSection('tournaments')">Tournaments</button>
+            <button class="nav-button dimmed" onclick="showSection('rules')">Rules</button>
         </div>
 
         <!-- Home Section -->
@@ -29,8 +31,8 @@
                 </a>
                 
                 <a href="https://www.twitter.com/SteelFlowerGG" target="_blank" class="social-button">
-                    <i class="fab fa-twitter social-icon"></i>
-                    <h3>Twitter</h3>
+                    <i class="fab fa-x-twitter social-icon"></i>
+                    <h3>X (Twitter)</h3>
                     <p>Follow our updates</p>
                 </a>
                 
@@ -96,31 +98,72 @@
                 </div>
             </div>
         </div>
+
+        <!-- Coming Soon Sections -->
+        <div id="tournaments-section" class="section-hidden coming-soon">
+            <h1>TOURNAMENTS</h1>
+            <div class="description">
+                <p>Tournaments section coming soon! Stay tuned for competitive events and challenges.</p>
+            </div>
+        </div>
+
+        <div id="rules-section" class="section-hidden coming-soon">
+            <h1>RULES & REGULATIONS</h1>
+            <div class="description">
+                <p>Official rules and regulations section coming soon. Check back later for detailed guidelines.</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Navigation functionality
+        // Navigation and URL handling
+        function updateURL(path) {
+            const state = { page: path.replace('/', '') };
+            history.pushState(state, '', path);
+        }
+
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.page) {
+                showSection(event.state.page);
+            } else {
+                showSection('home');
+            }
+        });
+
         function showSection(sectionId) {
-            document.getElementById('home-section').classList.toggle('section-hidden', sectionId !== 'home');
-            document.getElementById('blacklist-section').classList.toggle('section-hidden', sectionId !== 'blacklist');
-            
-            if(sectionId === 'blacklist' && originalData.length === 0) {
-                fetch('/api/blacklist')
-                    .then(response => response.json())
-                    .then(data => {
-                        originalData = data.data;
-                        updateTable(originalData);
-                    });
+            const allSections = ['home', 'blacklist', 'tournaments', 'rules'];
+            allSections.forEach(id => {
+                const element = document.getElementById(`${id}-section`);
+                if (element) {
+                    element.classList.toggle('section-hidden', id !== sectionId);
+                    element.classList.remove('coming-soon');
+                }
+            });
+
+            // Update URL
+            if(sectionId === 'blacklist') {
+                updateURL('/blacklist');
+                if(originalData.length === 0) {
+                    fetch('/api/blacklist')
+                        .then(response => response.json())
+                        .then(data => {
+                            originalData = data.data;
+                            updateTable(originalData);
+                        });
+                }
+            } else {
+                updateURL('/');
+            }
+
+            // Handle coming soon sections
+            if(['tournaments', 'rules'].includes(sectionId)) {
+                const section = document.getElementById(`${sectionId}-section`);
+                section.classList.add('coming-soon');
             }
         }
 
         // Original Blacklist Functionality
-        const dateOptions = {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        };
-
+        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
         let originalData = [];
 
         function updateTable(data) {
@@ -174,22 +217,15 @@
 
         document.getElementById('searchInput').addEventListener('input', function() {
             const filter = this.value.toLowerCase();
-            
-            if (!filter) {
-                updateTable(originalData);
-                return;
-            }
-
-            const filteredData = originalData.filter(entry => {
-                return Object.values(entry).some(value => 
+            const filteredData = originalData.filter(entry => 
+                Object.values(entry).some(value => 
                     String(value).toLowerCase().includes(filter)
-                );
-            });
-
-            updateTable(filteredData);
+                )
+            );
+            updateTable(filteredData.length > 0 ? filteredData : originalData);
         });
 
-        // Show home page by default
+        // Initialize
         showSection('home');
     </script>
 </body>

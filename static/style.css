@@ -169,6 +169,8 @@ tr:hover {
     display: flex;
     justify-content: center;
     margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .nav-button {
@@ -185,6 +187,17 @@ tr:hover {
 .nav-button:hover {
     background: var(--gold-primary);
     color: var(--dark-bg);
+}
+
+.nav-button.dimmed {
+    opacity: 0.6;
+    filter: grayscale(0.8);
+    cursor: not-allowed;
+}
+
+.nav-button.dimmed:hover {
+    background: rgba(20, 20, 20, 0.9);
+    transform: none;
 }
 
 .social-container {
@@ -223,6 +236,17 @@ tr:hover {
 
 .section-hidden {
     display: none;
+}
+
+.coming-soon {
+    display: block !important;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.coming-soon h1 {
+    color: rgba(255, 215, 0, 0.5);
+    filter: grayscale(0.5);
 }
 
 /* Mobile Styles */
