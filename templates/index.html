@@ -17,15 +17,30 @@
             <div class="spinner"></div>
         </div>
 
-        <div class="nav-container">
-            <button class="nav-button" onclick="showSection('home')">Home</button>
-            <button class="nav-button" onclick="showSection('blacklist')">Blacklist</button>
-            <button class="nav-button dimmed" onclick="showComingSoon('tournaments')">Tournaments</button>
-            <button class="nav-button dimmed" onclick="showComingSoon('rules')">Rules</button>
-        </div>
+        <nav class="main-nav">
+            <div class="nav-gradient"></div>
+            <div class="nav-inner">
+                <button class="nav-button active" onclick="showSection('home')">
+                    <span>Home</span>
+                    <div class="nav-line"></div>
+                </button>
+                <button class="nav-button" onclick="showSection('blacklist')">
+                    <span>Blacklist</span>
+                    <div class="nav-line"></div>
+                </button>
+                <button class="nav-button dimmed" onclick="showComingSoon('tournaments')">
+                    <span>Tournaments</span>
+                    <div class="nav-line"></div>
+                </button>
+                <button class="nav-button dimmed" onclick="showComingSoon('rules')">
+                    <span>Rules</span>
+                    <div class="nav-line"></div>
+                </button>
+            </div>
+        </nav>
 
         <!-- Home Section -->
-        <div id="home-section" class="home-content">
+        <div id="home-section" class="content-section">
             <h1 class="animate-pop">Welcome to Steel Flower</h1>
             
             <div class="description animate-slide">
@@ -57,7 +72,7 @@
         </div>
 
         <!-- Blacklist Section -->
-        <div id="blacklist-section" class="section-hidden">
+        <div id="blacklist-section" class="content-section section-hidden">
             <h1 class="animate-pop">STEEL FLOWER BLACKLIST</h1>
             
             <div class="description animate-slide">
@@ -123,14 +138,14 @@
         </div>
 
         <!-- Coming Soon Sections -->
-        <div id="tournaments-section" class="section-hidden coming-soon">
+        <div id="tournaments-section" class="content-section section-hidden">
             <h1>TOURNAMENTS</h1>
             <div class="description">
                 <p>Tournaments section coming soon! Stay tuned for competitive events and challenges.</p>
             </div>
         </div>
 
-        <div id="rules-section" class="section-hidden coming-soon">
+        <div id="rules-section" class="content-section section-hidden">
             <h1>RULES & REGULATIONS</h1>
             <div class="description">
                 <p>Official rules and regulations section coming soon. Check back later for detailed guidelines.</p>
@@ -144,26 +159,32 @@
         const animationDuration = 300;
 
         function showSection(sectionId) {
-            if(sectionId === currentSection) return;
-            
-            showLoading();
-            
-            const oldSection = currentSection;
-            currentSection = sectionId;
-            
-            setTimeout(() => {
-                const allSections = ['home', 'blacklist', 'tournaments', 'rules'];
-                allSections.forEach(id => {
-                    const element = document.getElementById(`${id}-section`);
-                    if(element) {
-                        element.classList.toggle('section-hidden', id !== sectionId);
-                        element.classList.remove('coming-soon');
-                    }
-                });
+            if (sectionId === currentSection) return;
 
-                if(sectionId === 'blacklist') {
+            showLoading();
+
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('section-hidden');
+            });
+            
+            currentSection = sectionId;
+
+            // Update button classes
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+                if (button.querySelector('span').textContent.toLowerCase().trim() === sectionId) {
+                    button.classList.add('active');
+                }
+            });
+
+            setTimeout(() => {
+                // Show new section
+                document.getElementById(`${sectionId}-section`).classList.remove('section-hidden');
+
+                if (sectionId === 'blacklist') {
                     updateURL('/blacklist');
-                    if(originalData.length === 0) {
+                    if (originalData.length === 0) {
                         fetchBlacklistData();
                     } else {
                         updateStats();
@@ -171,10 +192,24 @@
                 } else {
                     updateURL('/');
                 }
-                
+
                 hideLoading();
             }, animationDuration);
         }
+
+        function showComingSoon(sectionId) {
+            showSection(sectionId);
+        }
+
+        // Initialize active state
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hide all sections except home
+            document.querySelectorAll('.content-section').forEach(section => {
+                if (section.id !== 'home-section') {
+                    section.classList.add('section-hidden');
+                }
+            });
+        });
 
         // Enhanced Data Handling
         let originalData = [];
