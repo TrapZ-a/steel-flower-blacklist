@@ -3,23 +3,32 @@
 <head>
     <title>Steel Flower</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <div class="container">
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+
         <div class="nav-container">
             <button class="nav-button" onclick="showSection('home')">Home</button>
             <button class="nav-button" onclick="showSection('blacklist')">Blacklist</button>
-            <button class="nav-button dimmed" onclick="showSection('tournaments')">Tournaments</button>
-            <button class="nav-button dimmed" onclick="showSection('rules')">Rules</button>
+            <button class="nav-button dimmed" onclick="showComingSoon('tournaments')">Tournaments</button>
+            <button class="nav-button dimmed" onclick="showComingSoon('rules')">Rules</button>
         </div>
 
         <!-- Home Section -->
         <div id="home-section" class="home-content">
-            <h1>Welcome to Steel Flower</h1>
+            <h1 class="animate-pop">Welcome to Steel Flower</h1>
             
-            <div class="description">
+            <div class="description animate-slide">
                 <p>Welcome to Steel Flower Tournaments. We are a Critical Ops tournament organization that aims to bring the best experience to the Critical Ops Competitive Scene.</p>
             </div>
 
@@ -28,32 +37,46 @@
                     <i class="fab fa-discord social-icon"></i>
                     <h3>Discord Server</h3>
                     <p>Join our community</p>
+                    <div class="social-hover-effect"></div>
                 </a>
                 
                 <a href="https://www.twitter.com/SteelFlowerGG" target="_blank" class="social-button">
                     <i class="fab fa-x-twitter social-icon"></i>
                     <h3>X (Twitter)</h3>
                     <p>Follow our updates</p>
+                    <div class="social-hover-effect"></div>
                 </a>
                 
                 <a href="https://www.youtube.com/@SteelFlower" target="_blank" class="social-button">
                     <i class="fab fa-youtube social-icon"></i>
                     <h3>YouTube</h3>
                     <p>Watch our content</p>
+                    <div class="social-hover-effect"></div>
                 </a>
             </div>
         </div>
 
         <!-- Blacklist Section -->
         <div id="blacklist-section" class="section-hidden">
-            <h1>STEEL FLOWER</h1>
+            <h1 class="animate-pop">STEEL FLOWER BLACKLIST</h1>
             
-            <div class="description">
+            <div class="description animate-slide">
                 <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
             </div>
 
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search by IGN, Game ID, or Reason...">
+                <input type="text" id="searchInput" placeholder="Search by IGN, Game ID, or Reason..." 
+                       onfocus="this.placeholder=''" onblur="this.placeholder='Search by IGN, Game ID, or Reason...'">
+                <div class="search-tools">
+                    <button class="search-clear" onclick="clearSearch()">&times;</button>
+                </div>
+            </div>
+
+            <!-- Statistics Bar -->
+            <div class="stats-bar">
+                <span>Total Entries: <span id="totalCount">0</span></span>
+                <span>Active: <span id="activeCount">0</span></span>
+                <span>Inactive: <span id="inactiveCount">0</span></span>
             </div>
 
             <table id="blacklistTable">
@@ -116,55 +139,134 @@
     </div>
 
     <script>
-        // Navigation and URL handling
+        // Enhanced Navigation Handling
+        let currentSection = 'home';
+        const animationDuration = 300;
+
+        function showSection(sectionId) {
+            if(sectionId === currentSection) return;
+            
+            showLoading();
+            
+            const oldSection = currentSection;
+            currentSection = sectionId;
+            
+            setTimeout(() => {
+                const allSections = ['home', 'blacklist', 'tournaments', 'rules'];
+                allSections.forEach(id => {
+                    const element = document.getElementById(`${id}-section`);
+                    if(element) {
+                        element.classList.toggle('section-hidden', id !== sectionId);
+                        element.classList.remove('coming-soon');
+                    }
+                });
+
+                if(sectionId === 'blacklist') {
+                    updateURL('/blacklist');
+                    if(originalData.length === 0) {
+                        fetchBlacklistData();
+                    } else {
+                        updateStats();
+                    }
+                } else {
+                    updateURL('/');
+                }
+                
+                hideLoading();
+            }, animationDuration);
+        }
+
+        // Enhanced Data Handling
+        let originalData = [];
+        let searchTimeout;
+
+        async function fetchBlacklistData() {
+            showLoading();
+            try {
+                const response = await fetch('/api/blacklist');
+                const data = await response.json();
+                originalData = data.data;
+                updateTable(originalData);
+                updateStats();
+                setupTableSorting();
+            } catch(error) {
+                console.error('Error fetching data:', error);
+            }
+            hideLoading();
+        }
+
+        // Enhanced Search with Debounce
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const filter = this.value.toLowerCase();
+                const filteredData = originalData.filter(entry => 
+                    Object.values(entry).some(value => 
+                        String(value).toLowerCase().includes(filter)
+                    )
+                );
+                updateTable(filteredData);
+                updateStats(filteredData);
+            }, 300);
+        });
+
+        // New Features
+        function updateStats(data = originalData) {
+            document.getElementById('totalCount').textContent = data.length;
+            document.getElementById('activeCount').textContent = 
+                data.filter(entry => entry.status.toLowerCase() === 'active').length;
+            document.getElementById('inactiveCount').textContent = 
+                data.filter(entry => entry.status.toLowerCase() === 'inactive').length;
+        }
+
+        function setupTableSorting() {
+            document.querySelectorAll('#blacklistTable th').forEach((header, index) => {
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', () => sortTable(index));
+            });
+        }
+
+        function sortTable(columnIndex) {
+            const tbody = document.querySelector('#blacklistTable tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((a, b) => {
+                const aValue = a.children[columnIndex].textContent;
+                const bValue = b.children[columnIndex].textContent;
+                return aValue.localeCompare(bValue, undefined, {numeric: true});
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Loading Animation
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        // Keyboard Shortcuts
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                if(e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+                if(e.key === 'Escape') {
+                    document.getElementById('playerModal').style.display = 'none';
+                }
+            });
+        }
+
+        // Existing Functions
         function updateURL(path) {
             const state = { page: path.replace('/', '') };
             history.pushState(state, '', path);
         }
-
-        window.addEventListener('popstate', (event) => {
-            if (event.state && event.state.page) {
-                showSection(event.state.page);
-            } else {
-                showSection('home');
-            }
-        });
-
-        function showSection(sectionId) {
-            const allSections = ['home', 'blacklist', 'tournaments', 'rules'];
-            allSections.forEach(id => {
-                const element = document.getElementById(`${id}-section`);
-                if (element) {
-                    element.classList.toggle('section-hidden', id !== sectionId);
-                    element.classList.remove('coming-soon');
-                }
-            });
-
-            // Update URL
-            if(sectionId === 'blacklist') {
-                updateURL('/blacklist');
-                if(originalData.length === 0) {
-                    fetch('/api/blacklist')
-                        .then(response => response.json())
-                        .then(data => {
-                            originalData = data.data;
-                            updateTable(originalData);
-                        });
-                }
-            } else {
-                updateURL('/');
-            }
-
-            // Handle coming soon sections
-            if(['tournaments', 'rules'].includes(sectionId)) {
-                const section = document.getElementById(`${sectionId}-section`);
-                section.classList.add('coming-soon');
-            }
-        }
-
-        // Original Blacklist Functionality
-        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-        let originalData = [];
 
         function updateTable(data) {
             const tbody = document.querySelector('#blacklistTable tbody');
@@ -204,6 +306,20 @@
                 new Date(player.date_added).toLocaleDateString('en-GB', dateOptions);
         }
 
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchBlacklistData();
+            setupKeyboardShortcuts();
+        });
+
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.page) {
+                showSection(event.state.page);
+            } else {
+                showSection('home');
+            }
+        });
+
         document.querySelector('.close').addEventListener('click', () => {
             document.getElementById('playerModal').style.display = 'none';
         });
@@ -215,17 +331,13 @@
             }
         });
 
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const filter = this.value.toLowerCase();
-            const filteredData = originalData.filter(entry => 
-                Object.values(entry).some(value => 
-                    String(value).toLowerCase().includes(filter)
-                )
-            );
-            updateTable(filteredData.length > 0 ? filteredData : originalData);
-        });
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            updateTable(originalData);
+            updateStats();
+        }
 
-        // Initialize
+        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
         showSection('home');
     </script>
 </body>
