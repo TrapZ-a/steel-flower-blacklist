@@ -4,23 +4,294 @@
     --dark-bg: #0A0A0A;
     --container-bg: #1A1A1A;
     --text-primary: #FFFFFF;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --scroll-progress: 0;
 }
 
 body {
-    background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+    background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
                 url('steel-flower-logo.png') center/cover no-repeat fixed;
     color: var(--text-primary);
     font-family: Arial, sans-serif;
     min-height: 100vh;
     margin: 0;
     padding: 0;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23FFD700"><circle cx="12" cy="12" r="8"/></svg>') 12 12, auto;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
+    padding-top: 20px !important;
+    padding-bottom: 20px;
 }
 
+.scroll-progress {
+    height: 3px;
+    background: var(--gold-primary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(var(--scroll-progress) * 1%);
+    z-index: 9999;
+    transition: width 0.1s linear;
+}
+
+.content-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.section-hidden {
+    display: none; /* Ensures hidden sections don't occupy space */
+}
+
+.content-section.active {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    position: relative;
+}
+
+
+.social-button {
+    background: linear-gradient(145deg, 
+        rgba(20, 20, 20, 0.95) 0%, 
+        rgba(40, 40, 40, 0.9) 100%);
+    border: 2px solid var(--gold-primary);
+    padding: 2rem;
+    border-radius: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.rules-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    margin-top: 0 !important;
+    gap: 1rem;
+}
+
+.rules-sidebar {
+    background: rgba(20, 20, 20, 0.95);
+    border-right: 2px solid var(--gold-primary);
+    padding: 1rem;
+    position: sticky;
+    top: 20px;              /* lowered from 100px */
+    height: fit-content;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    z-index: 50;
+}
+
+.rules-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    text-align: left;
+    padding: 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.nav-item.active {
+    background: var(--gold-primary);
+    color: var(--dark-bg);
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255,215,0,0.3);
+}
+
+.rules-content {
+    background: rgba(10, 10, 10, 0.9);
+    padding-top: 0 !important;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    /* min-height: 100vh; */        /* ⬅️ removed this */
+}
+
+.doc-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 3rem;
+}
+
+.doc-section {
+    display: block !important; /* Force sections to remain in document flow */
+}
+
+.doc-section.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.rules-table-container {
+    overflow-x: auto;
+    margin: 2rem 0;
+}
+
+.doc-section:not(:last-child) {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,215,0,0.1);
+}
+
+.rules-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(20, 20, 20, 0.9);
+    min-width: 800px;
+}
+
+
+.rules-table td, 
+.rules-table th {
+    padding: 1rem;
+    border: 1px solid var(--gold-primary);
+    text-align: left;
+}
+
+.version-info {
+    border-top: 2px solid var(--gold-primary);
+    padding-top: 1rem;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    opacity: 0.8;
+}
+
+.social-button:hover .social-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+@keyframes socialGlow {
+    to { transform: translate(50%, 50%); }
+}
+
+.social-hover-effect {
+    background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), 
+                rgba(255, 215, 0, 0.1) 0%, 
+                transparent 100%);
+}
+
+th[data-sort]::after {
+    content: ' ↕';
+    color: var(--gold-primary);
+    font-size: 0.8em;
+}
+
+th[data-sort="asc"]::after {
+    content: ' ↑';
+}
+
+th[data-sort="desc"]::after {
+    content: ' ↓';
+}
+
+.status-filter {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.filter-btn {
+    background: rgba(255,215,0,0.1);
+    border: 1px solid var(--gold-primary);
+    color: var(--gold-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+    background: var(--gold-primary);
+    color: var(--dark-bg);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: radial-gradient(circle at 50% 50%, 
+        rgba(255, 215, 0, 0.05) 0%, 
+        transparent 100%);
+    animation: particleFlow 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes particleFlow {
+    0% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.2); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 0.3; }
+}
+
+@media (max-width: 768px) {
+    .status-filter {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-btn {
+        width: 80%;
+        text-align: center;
+    }
+
+    .rules-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .rules-sidebar {
+        position: static;
+        height: auto;
+        max-height: 300px;
+    }
+    
+    .rules-content {
+        overflow: visible !important;
+        padding: 0.5rem !important;
+    }
+    
+    .rules-table {
+        min-width: 100%;
+    }
+
+    .rules-nav {
+        gap: 0.3rem;
+    }
+}
+
+@keyframes sectionAppear {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Existing styles below - keep all previous styles and add these new ones at the top */
 h1 {
     text-align: center;
     color: var(--gold-primary);
@@ -164,7 +435,7 @@ tr:hover {
 .main-nav {
     position: relative;
     padding: 1.5rem 0;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem !important;
     background: linear-gradient(180deg, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.7) 100%);
     box-shadow: 0 0 30px rgba(0,0,0,0.7);
 }
@@ -268,34 +539,26 @@ tr:hover {
     padding: 0 2rem;
 }
 
-.content-section {
-    display: block;
-}
-
-.section-hidden {
-    display: none !important;
-}
-
 .social-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
 }
 
-.social-button {
-    background: rgba(20, 20, 20, 0.9);
-    border: 2px solid var(--gold-primary);
-    padding: 1.5rem;
-    border-radius: 10px;
-    text-align: center;
-    transition: transform 0.3s ease;
-    text-decoration: none;
-}
-
-.social-button:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 215, 0, 0.1);
+.social-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent 25%, 
+        rgba(255, 215, 0, 0.1) 50%, 
+        transparent 75%);
+    animation: socialGlow 4s infinite linear;
+    z-index: 1;
 }
 
 .social-icon {
@@ -375,11 +638,17 @@ tr:hover {
     }
 
     .social-button h3 {
-        font-size: 1rem;
+        font-size: 1.4rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
     }
 
     .social-button p {
-        font-size: 0.8rem;
+        font-size: 0.95rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
     }
 
     .modal-content {
@@ -462,9 +731,6 @@ tr:hover {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at var(--x) var(--y), 
-                rgba(255, 215, 0, 0.1) 0%, 
-                transparent 100%);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s;
@@ -472,12 +738,4 @@ tr:hover {
 
 .social-button:hover .social-hover-effect {
     opacity: 1;
-}
-
-@media (max-width: 768px) {
-    .stats-bar {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
-    }
 }
