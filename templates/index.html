@@ -54,10 +54,11 @@
                 <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
             </div>
             <div class="search-box">
+                <label for="searchInput" class="sr-only">Search</label>
                 <input type="text" id="searchInput" placeholder="Search by IGN, Game ID, or Reason..." 
                        onfocus="this.placeholder=''" onblur="this.placeholder='Search by IGN, Game ID, or Reason...'">
                 <div class="search-tools">
-                    <button class="search-clear" onclick="clearSearch()">&times;</button>
+                    <button class="search-clear" aria-label="Clear search" onclick="clearSearch()">&times;</button>
                 </div>
             </div>
             <div class="stats-bar">
@@ -68,37 +69,37 @@
             <table id="blacklistTable">
                 <thead>
                     <tr>
-                        <th>IGN</th>
-                        <th>GAME ID</th>
-                        <th>REASON</th>
-                        <th>STATUS</th>
-                        <th>DATE ADDED</th>
+                        <th scope="col">IGN</th>
+                        <th scope="col">GAME ID</th>
+                        <th scope="col">REASON</th>
+                        <th scope="col">STATUS</th>
+                        <th scope="col">DATE ADDED</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
-            <div id="playerModal" class="modal">
+            <div id="playerModal" class="modal" role="dialog" aria-labelledby="modalIGN" aria-hidden="true">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <button class="close" aria-label="Close modal">&times;</button>
                     <div class="profile-header">
-                        <h2 id="modalIGN"></h2>
+                        <h2 id="modalIGN" class="animate-pop"></h2>
                     </div>
                     <div class="profile-details">
                         <div class="detail-item">
-                            <span class="detail-label">Discord ID</span>
+                            <span class="detail-label"><i class="fas fa-id-badge" aria-hidden="true"></i> Discord ID</span>
                             <span id="discordID" class="detail-value"></span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Game ID</span>
+                            <span class="detail-label"><i class="fas fa-gamepad" aria-hidden="true"></i> Game ID</span>
                             <span id="modalGameID" class="detail-value"></span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Status</span>
+                            <span class="detail-label"><i class="fas fa-power-off" aria-hidden="true"></i> Status</span>
                             <span id="modalStatus" class="detail-value"></span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Date Added</span>
+                            <span class="detail-label"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Date Added</span>
                             <span id="modalDate" class="detail-value"></span>
                         </div>
                     </div>
@@ -677,43 +678,45 @@
             });
         
             function showSection(sectionId) {
-                if (sectionId === currentSection) return;
+            if (sectionId === currentSection) return;
                 showLoading();
-            
-                document.querySelectorAll('.content-section').forEach(section => {
-                    section.classList.remove('active');
-                    section.classList.add('section-hidden');
-                });
-            
-                currentSection = sectionId;
-                document.querySelectorAll('.nav-button').forEach(button => {
-                    button.classList.remove('active');
-                    const btnSection = button.querySelector('span').textContent.toLowerCase().trim();
-                    if(btnSection === sectionId) button.classList.add('active');
-                });
 
-                setTimeout(() => {
-                    const activeSection = document.getElementById(`${sectionId}-section`);
-                    activeSection.classList.remove('section-hidden');
-                    activeSection.classList.add('active');
-        
-                    if (sectionId === 'blacklist') {
-                        updateURL('/blacklist');
-                        if(originalData.length === 0) {
-                            fetchBlacklistData().then(() => {
-                                createStatusFilter();
-                                setupLiveSearch();
-                            });
-                        }
-                    } else if (sectionId === 'rules') {
-                        // Reset rules navigation
-                        document.querySelector('.rules-nav .nav-item').click();
-                    } else {
-                        updateURL('/');
-                    }
-                    hideLoading();
-                }, animationDuration);
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+                section.classList.add('section-hidden');
+            });
+
+            currentSection = sectionId;
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+                const btnSection = button.querySelector('span').textContent.toLowerCase().trim();
+                if (btnSection === sectionId) button.classList.add('active');
+            });
+
+            setTimeout(() => {
+                const activeSection = document.getElementById(`${sectionId}-section`);
+                activeSection.classList.remove('section-hidden');
+                activeSection.classList.add('active');
+
+        // Update the URL based on the section
+                if (sectionId === 'blacklist') {
+                    updateURL('/blacklist');
+                if (originalData.length === 0) {
+                    fetchBlacklistData().then(() => {
+                        createStatusFilter();
+                        setupLiveSearch();
+                    });
+                }
+            } else if (sectionId === 'rules') {
+                updateURL('/rules');
+            // Reset rules navigation
+                document.querySelector('.rules-nav .nav-item').click();
+            } else {
+                updateURL('/'); // Home section
             }
+            hideLoading();
+            }, animationDuration);
+        }
         
             function showComingSoon(sectionId) {
                 showSection(sectionId);
@@ -890,6 +893,7 @@
             function showPlayerDetails(player) {
                 const modal = document.getElementById('playerModal');
                 modal.style.display = 'block';
+                modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 document.getElementById('modalIGN').textContent = player.ign;
                 document.getElementById('discordID').textContent = player.discord_id;
                 document.getElementById('modalGameID').textContent = player.game_id;
