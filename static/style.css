@@ -18,6 +18,9 @@ body {
     min-height: 100vh;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23FFD700"><circle cx="12" cy="12" r="8"/></svg>') 12 12, auto;
 }
 
@@ -28,6 +31,8 @@ body {
     padding-top: 20px !important;
     padding-bottom: 20px;
     z-index: 1;
+    flex: 1;
+    padding-bottom: 80px;
 }
 
 .scroll-progress {
@@ -61,6 +66,7 @@ body {
     transform: translateY(0);
     visibility: visible;
     position: relative;
+    display: block;
 }
 
 
@@ -260,6 +266,10 @@ body::before {
         line-height: 1.6;
     }
 
+    .container {
+        padding-bottom: 120px; /* More space on mobile */
+    }
+
     h1 {
         font-size: 2rem !important;
         margin: 0.5rem 0;
@@ -381,6 +391,10 @@ body::before {
         padding: 0.5rem;
         font-size: 0.8rem;
         opacity: 0.7;
+    }
+
+    .site-footer {
+        position: relative; /* Ensure mobile footer stays in flow */
     }
 }
 
@@ -935,12 +949,13 @@ tr:hover {
 }
 
 .stats-bar {
-    display: flex;
-    justify-content: space-around;
     margin: 1rem 0;
     padding: 1rem;
     background: rgba(20, 20, 20, 0.9);
     border-radius: 5px;
+    display: flex;
+    justify-content: space-around;
+    order: 2; /* Ensures proper order in flex layout */
 }
 
 .stats-bar span {
@@ -980,14 +995,12 @@ tr:hover {
 }
 
 .site-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     background: rgba(10, 10, 10, 0.95);
     border-top: 2px solid var(--gold-primary);
-    padding: 1rem 0;
+    padding: 1.5rem 0;
+    margin-top: auto;
     z-index: 100;
+    position: relative;
 }
 
 .footer-content {
@@ -1029,4 +1042,115 @@ tr:hover {
     color: rgba(255, 215, 0, 0.7);
     font-size: 0.9rem;
     letter-spacing: 0.5px;
+}
+#tournaments-section .description {
+    max-width: 800px;
+    margin: 1rem auto 2rem;
+}
+
+.tournaments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 0 1rem;
+}
+
+.tournament-card {
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid var(--gold-primary);
+    border-radius: 10px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.tournament-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(255,215,0,0.2);
+}
+
+.tournament-header {
+    border-bottom: 1px solid var(--gold-primary);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tournament-title {
+    color: var(--gold-primary);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+}
+
+.tournament-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status-upcoming {
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+}
+
+.status-completed {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff0000;
+}
+
+.tournament-detail {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+}
+
+.detail-label {
+    color: var(--gold-primary);
+    opacity: 0.8;
+}
+
+.detail-value {
+    text-align: right;
+}
+
+.progress-bar {
+    height: 5px;
+    background: rgba(255,215,0,0.2);
+    border-radius: 3px;
+    margin: 1rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--gold-primary);
+    transition: width 0.5s ease;
+}
+
+.tournament-detail-page {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 10px;
+}
+
+.back-button {
+    display: inline-block;
+    margin-top: 2rem;
+    color: var(--gold-primary);
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.tournament-meta {
+    margin: 0.5rem 0;
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
 }

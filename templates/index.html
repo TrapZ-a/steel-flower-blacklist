@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Steel Flower</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
@@ -9,720 +9,829 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-</head>
-<body>
+  </head>
+  <body>
     <div class="scroll-progress"></div>
     <div class="container">
-        <div id="loadingSpinner" class="loading-spinner">
-            <div class="spinner"></div>
+      <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+
+      <nav class="main-nav">
+        <div class="nav-gradient"></div>
+        <div class="nav-inner">
+          <button class="nav-button active" onclick="showSection('home')">
+            <span>Home</span>
+            <div class="nav-line"></div>
+          </button>
+          <button class="nav-button" onclick="showSection('blacklist')">
+            <span>Blacklist</span>
+            <div class="nav-line"></div>
+          </button>
+          <button class="nav-button" onclick="showSection('tournaments')">
+            <span>Tournaments</span>
+            <div class="nav-line"></div>
+            </button>
+          <button class="nav-button" onclick="showSection('rules')">
+            <span>Rules</span>
+            <div class="nav-line"></div>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Home Section -->
+      <div id="home-section" class="content-section active">
+        <h1 class="animate-pop">Welcome to Steel Flower</h1>
+        <div class="description animate-slide">
+          <p>Welcome to Steel Flower Tournaments. We are a Critical Ops tournament organization that aims to bring the best experience to the Critical Ops Competitive Scene.</p>
+        </div>
+      </div>
+
+      <!-- Blacklist Section -->
+      <div id="blacklist-section" class="content-section">
+        <h1 class="animate-pop">STEEL FLOWER BLACKLIST</h1>
+        <div class="description animate-slide">
+          <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
+        </div>
+        <div class="search-box">
+          <label for="searchInput" class="sr-only">Search</label>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by IGN, Game ID, or Reason..."
+            onfocus="this.placeholder=''"
+            onblur="this.placeholder='Search by IGN, Game ID, or Reason...'"
+          >
+          <div class="search-tools">
+            <button class="search-clear" aria-label="Clear search" onclick="clearSearch()">&times;</button>
+          </div>
+        </div>
+        <div class="stats-bar">
+          <span>Total Entries: <span id="totalCount">0</span></span>
+          <span>Active: <span id="activeCount">0</span></span>
+          <span>Inactive: <span id="inactiveCount">0</span></span>
+        </div>
+        <table id="blacklistTable">
+          <thead>
+            <tr>
+              <th scope="col">IGN</th>
+              <th scope="col">GAME ID</th>
+              <th scope="col">REASON</th>
+              <th scope="col">STATUS</th>
+              <th scope="col">DATE ADDED</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <div id="playerModal" class="modal" role="dialog" aria-labelledby="modalIGN" aria-hidden="true">
+          <div class="modal-content">
+            <button class="close" aria-label="Close modal">&times;</button>
+            <div class="profile-header">
+              <h2 id="modalIGN" class="animate-pop"></h2>
+            </div>
+            <div class="profile-details">
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-id-badge" aria-hidden="true"></i> Discord ID</span>
+                <span id="discordID" class="detail-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-gamepad" aria-hidden="true"></i> Game ID</span>
+                <span id="modalGameID" class="detail-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-power-off" aria-hidden="true"></i> Status</span>
+                <span id="modalStatus" class="detail-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Date Added</span>
+                <span id="modalDate" class="detail-value"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coming Soon Sections -->
+      <div id="tournaments-section" class="content-section">
+        <h1 class="animate-pop">TOURNAMENTS</h1>
+        <div class="description animate-slide">
+          <p>Explore current and upcoming Steel Flower tournaments. Check registration status, formats, and participate in competitive events.</p>
         </div>
 
-        <nav class="main-nav">
-            <div class="nav-gradient"></div>
-            <div class="nav-inner">
-                <button class="nav-button active" onclick="showSection('home')">
-                    <span>Home</span>
-                    <div class="nav-line"></div>
-                </button>
-                <button class="nav-button" onclick="showSection('blacklist')">
-                    <span>Blacklist</span>
-                    <div class="nav-line"></div>
-                </button>
-                <button class="nav-button dimmed" onclick="showComingSoon('tournaments')">
-                    <span>Tournaments</span>
-                    <div class="nav-line"></div>
-                </button>
-                <button class="nav-button dimmed" onclick="showComingSoon('rules')">
-                    <span>Rules</span>
-                    <div class="nav-line"></div>
-                </button>
-            </div>
-        </nav>
-
-        <!-- Home Section -->
-        <div id="home-section" class="content-section active">
-            <h1 class="animate-pop">Welcome to Steel Flower</h1>
-            <div class="description animate-slide">
-                <p>Welcome to Steel Flower Tournaments. We are a Critical Ops tournament organization that aims to bring the best experience to the Critical Ops Competitive Scene.</p>
-            </div>
+        <div class="search-box">
+          <label for="tournamentSearch" class="sr-only">Search Tournaments</label>
+          <input
+              type="text"
+              id="tournamentSearch"
+              placeholder="Search tournaments..."
+              onfocus="this.placeholder=''"
+              onblur="this.placeholder='Search tournaments...'"
+          >
         </div>
 
-        <!-- Blacklist Section -->
-        <div id="blacklist-section" class="content-section section-hidden">
-            <h1 class="animate-pop">STEEL FLOWER BLACKLIST</h1>
-            <div class="description animate-slide">
-                <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
-            </div>
-            <div class="search-box">
-                <label for="searchInput" class="sr-only">Search</label>
-                <input type="text" id="searchInput" placeholder="Search by IGN, Game ID, or Reason..." 
-                       onfocus="this.placeholder=''" onblur="this.placeholder='Search by IGN, Game ID, or Reason...'">
-                <div class="search-tools">
-                    <button class="search-clear" aria-label="Clear search" onclick="clearSearch()">&times;</button>
-                </div>
-            </div>
-            <div class="stats-bar">
-                <span>Total Entries: <span id="totalCount">0</span></span>
-                <span>Active: <span id="activeCount">0</span></span>
-                <span>Inactive: <span id="inactiveCount">0</span></span>
-            </div>
-            <table id="blacklistTable">
-                <thead>
-                    <tr>
-                        <th scope="col">IGN</th>
-                        <th scope="col">GAME ID</th>
-                        <th scope="col">REASON</th>
-                        <th scope="col">STATUS</th>
-                        <th scope="col">DATE ADDED</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <div id="playerModal" class="modal" role="dialog" aria-labelledby="modalIGN" aria-hidden="true">
-                <div class="modal-content">
-                    <button class="close" aria-label="Close modal">&times;</button>
-                    <div class="profile-header">
-                        <h2 id="modalIGN" class="animate-pop"></h2>
-                    </div>
-                    <div class="profile-details">
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="fas fa-id-badge" aria-hidden="true"></i> Discord ID</span>
-                            <span id="discordID" class="detail-value"></span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="fas fa-gamepad" aria-hidden="true"></i> Game ID</span>
-                            <span id="modalGameID" class="detail-value"></span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="fas fa-power-off" aria-hidden="true"></i> Status</span>
-                            <span id="modalStatus" class="detail-value"></span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Date Added</span>
-                            <span id="modalDate" class="detail-value"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Stats Bar - Moved below search box -->
+        <div class="stats-bar">
+          <span>Total Tournaments: <span id="totalTournaments">0</span></span>
+          <span>Upcoming: <span id="upcomingCount">0</span></span>
+          <span>Completed: <span id="completedCount">0</span></span>
         </div>
 
-        <!-- Coming Soon Sections -->
-        <div id="tournaments-section" class="content-section section-hidden">
-            <h1>TOURNAMENTS</h1>
-            <div class="description">
-                <p>Tournaments section coming soon! Stay tuned for competitive events and challenges.</p>
+        <!-- Tournaments Grid -->
+        <div class="tournaments-grid"></div>
+      </div>
+      
+      <div id="rules-section" class="content-section">
+        <h1 class="animate-pop">RULES</h1>
+        <div class="rules-container">
+          <div class="rules-sidebar">
+            <div class="sidebar-header">
+              <h2>Table of Contents</h2>
             </div>
-        </div>
-        <div id="rules-section" class="content-section section-hidden">
-            <div class="rules-container">
-                <div class="rules-sidebar">
-                    <div class="sidebar-header">
-                        <h2>Table of Contents</h2>
-                    </div>
-                    <nav class="rules-nav">
-                        <button class="nav-item active" data-section="disclaimer">1. Disclaimer</button>
-                        <button class="nav-item" data-section="eligibility">2. Eligibility</button>
-                        <button class="nav-item" data-section="roster-rules">3. Roster</button>
-                        <button class="nav-item" data-section="devices-software">4. Devices</button>
-                        <button class="nav-item" data-section="scheduling-match-organization">5. Scheduling</button>
-                        <button class="nav-item" data-section="game">6. Game Rules</button>
-                        <button class="nav-item" data-section="post-match">7. Post-Match</button>
-                        <button class="nav-item" data-section="anti-cheat">8. Anti-Cheat</button>
-                        <button class="nav-item" data-section="prizing">9. Prizing</button>
-                        <button class="nav-item" data-section="sanctions">10. Sanctions</button>
-                    </nav>
-                </div>
+            <nav class="rules-nav">
+              <button class="nav-item active" data-section="disclaimer">1. Disclaimer</button>
+              <button class="nav-item" data-section="eligibility">2. Eligibility</button>
+              <button class="nav-item" data-section="roster-rules">3. Roster</button>
+              <button class="nav-item" data-section="devices-software">4. Devices</button>
+              <button class="nav-item" data-section="scheduling-match-organization">5. Scheduling</button>
+              <button class="nav-item" data-section="game">6. Game Rules</button>
+              <button class="nav-item" data-section="post-match">7. Post-Match</button>
+              <button class="nav-item" data-section="anti-cheat">8. Anti-Cheat</button>
+              <button class="nav-item" data-section="prizing">9. Prizing</button>
+              <button class="nav-item" data-section="sanctions">10. Sanctions</button>
+            </nav>
+          </div>
         
-                <div class="rules-content">
-                    <div class="document-header animate-slide">
-                        <h1>Steel Flower Critical Ops Global Tournament Regulations</h1>
-                        <div class="version-info">
-                            <span>Version 1</span>
-                            
-                        </div>
-                    </div>
-        
-                    <section class="doc-section active" id="disclaimer">
-                        <h2>Section 1. Disclaimer</h2>
-                        <p>By participating in an event hosted by Steel Flower Tournaments (SFLT, Organizer), you agree to:</p>
-                        
-                        <ul>
-                            <li>Comply with the contents of this document</li>
-                            <li>Adhere to Critical Ops <a href="https://criticalopsgame.com/terms/" target="_blank">Terms of Use</a></li>
-                            <li>Follow the Critical Ops <a href="https://criticalopsgame.com/code-conduct/" target="_blank">Code of Conduct</a></li>
-                        </ul>
-                    
-                        <h3>Data Collection</h3>
-                        <p>You consent to Steel Flower Tournaments collecting the following information for management purposes:</p>
-                        <ul>
-                            <li><strong>Personal Information:</strong>
-                                <ul>
-                                    <li>Nickname</li>
-                                    <li>In-Game Nickname</li>
-                                    <li>In-Game Identifier (ID)</li>
-                                </ul>
-                            </li>
-                            <li><strong>Device Information:</strong>
-                                <ul>
-                                    <li>Make &amp; Model</li>
-                                    <li>Serial Number</li>
-                                    <li>OS Version</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    
-                        <h3>Data Retention</h3>
-                        <ul>
-                            <li>Collected information will be stored for up to 72 hours</li>
-                            <li>Previously public information is exempt from this retention policy</li>
-                        </ul>
-                    
-                        <h3>1.1. Code of Conduct</h3>
-                        <p>All participants must maintain appropriate behavior towards:</p>
-                        <ul>
-                            <li>Players</li>
-                            <li>Team representatives</li>
-                            <li>Staff members</li>
-                            <li>Community members</li>
-                        </ul>
-                        
-                        <p>Prohibited behavior includes but is not limited to:</p>
-                        <ul>
-                            <li>Harassment</li>
-                            <li>Bigotry</li>
-                            <li>Racism</li>
-                            <li>Any disrespectful conduct</li>
-                        </ul>
-                        <p>Violations will result in sanctions determined by the admin team.</p>
-                    
-                        <h3>General Provisions</h3>
-                        <ul>
-                            <li>These regulations apply to all Critical Ops events organized by SFLT and partners unless otherwise specified</li>
-                            <li>Steel Flower Tournaments reserves the right to modify this document without prior notice</li>
-                        </ul>
-                    </section>
-        
-                    <section class="doc-section" id="eligibility">
-                        <h2>Section 2. Eligibility</h2>
-                        <p>You must meet the following requirements in order to participate and receive prizes from a SFLT event.</p>
-                    
-                        <h3>2.1. Account Verification</h3>
-                        <ul>
-                            <li>You must use a verified Critical Ops account linked to a social media account to participate.</li>
-                        </ul>
-                    
-                        <h3>2.2. Game Statistics</h3>
-                        <ul>
-                            <li>Your account must have:
-                                <ul>
-                                    <li>Minimum 500 recorded kills in Quick &amp; Custom Games</li>
-                                    <li>Minimum 500 recorded kills in Ranked Games</li>
-                                    <li>Total minimum of 1000 combined kills</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    
-                        <h3>2.3. Discord Integration</h3>
-                        <ul>
-                            <li>Each account must be bound to a Discord account.</li>
-                            <li>Your Discord name and discriminator number must be included with your Critical Ops account details during registration.</li>
-                        </ul>
-                    
-                        <h3>2.4. Restricted Players</h3>
-                        <ul>
-                            <li>Players listed in the SFLT Restricted List with Banned status are prohibited from participating.</li>
-                        </ul>
-                    
-                        <h3>2.5. Eligibility Exceptions</h3>
-                        <ul>
-                            <li>Accounts not meeting requirements (2.1, 2.2, 2.3) cannot participate unless approved by a tournament administrator.</li>
-                        </ul>
-                    
-                        <h3>2.6. Registration Details</h3>
-                        <ul>
-                            <li>You must provide accurate account information (In-Game Name and Identifier) during registration.
-                            </li>
-                            <li>Failure to provide required information will result in loss of eligibility.</li>
-                        </ul>
-                    
-                        <h3>2.7. In-Game Bans</h3>
-                        <ul>
-                            <li>Any player with a banned account is permanently ineligible to participate.</li>
-                        </ul>
-                    </section>
-
-
-                    <section class="doc-section" id="roster-rules">
-                        <h2>Section 3. Roster</h2>
-                        <p>Each team must register a roster before participating in an event.</p>
-                    
-                        <h3>3.1. Registration Deadline</h3>
-                        <ul>
-                            <li>Unless specified otherwise, a roster must be registered 1 hour before the commencement of an event.</li>
-                        </ul>
-                    
-                        <h3>3.2. Roster Composition</h3>
-                        <ul>
-                            <li>Each roster must contain a minimum of five (5) players.
-                                <ul>
-                                    <li>3.2.1. Each roster can include an additional two (2) substitutes. During registration these must be separated from the main lineup; if not separated, the top 5 players on the list will be treated as mains by default.</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    
-                        <h3>3.3. Roster Modifications</h3>
-                        <ul>
-                            <li>Each roster can be modified (player additions, removal or replacement) by the respective team's representative(s) for up to two (2) times throughout the event.
-                                <ul>
-                                    <li>3.3.1. Roster changes are only valid before the credentials of a match are provided. Changes beyond this point can be allowed only with mutual agreement.</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    
-                        <h3>3.4. Player Exclusivity</h3>
-                        <ul>
-                            <li>A player must only be in one roster at any given time.</li>
-                        </ul>
-                    
-                        <h3>3.5. Team Branding</h3>
-                        <ul>
-                            <li>During registration you can provide a team logo. The use of inappropriate team names and logos will result in tournament bans, unless specified otherwise.</li>
-                        </ul>
-                    </section>
-
-                    <section class="doc-section" id="devices-software">
-                        <h2>Section 4. Devices and Software</h2>
-                        <p>Players must use the following devices and software during an event.</p>
-                    
-                        <h3>4.1. Allowed Devices</h3>
-                        <ul>
-                            <li>You are allowed to use mobile devices (iOS and Android smartphones and tablets) to participate.
-                                <ul>
-                                    <li>4.1.1. Participating using devices on unsupported platforms (e.g. PC, Mac with or without emulator) is prohibited.</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    
-                        <h3>4.2. Operating System</h3>
-                        <ul>
-                            <li>You must update your device to the latest OS version your device supports (at least Android 13 or iOS 18.1). When in doubt, contact Staff.</li>
-                        </ul>
-                    
-                        <h3>4.3. Game Client</h3>
-                        <ul>
-                            <li>Unless specified, you must update your Critical Ops game client to the latest live version available.</li>
-                        </ul>
-                    
-                        <h3>4.4. Network Restrictions</h3>
-                        <ul>
-                            <li>You are not allowed to use any Virtual Private Networks (VPN) or proxy servers to play.</li>
-                        </ul>
-                    
-                        <h3>4.5. Game Boosters</h3>
-                        <ul>
-                            <li>In case your device supports game booster software, you must only use the software that comes with your device (e.g. Samsung Game Launcher, ASUS Armoury Crate, Xiaomi Game Turbo, HONOR Game Booster, etc.). When in doubt, contact Staff.</li>
-                        </ul>
-                    
-                        <h3>4.6. Device Modifications</h3>
-                        <ul>
-                            <li>The use of jailbroken devices is prohibited.</li>
-                        </ul>
-                    </section>
-
-                    <section class="doc-section" id="scheduling-match-organization">
-                        <h2>Section 5. Scheduling and Match Organization</h2>
-                        <p>Players must follow the following rules during scheduling and match organization.</p>
-                    
-                        <h3>5.1. Event Presence</h3>
-                        <ul>
-                            <li>You must be present at the start of the event.</li>
-                        </ul>
-                    
-                        <h3>5.2. Communication</h3>
-                        <ul>
-                            <li>Unless specified, your team captain or you (if you are your team captain) must use Discord DMs or private captain channels in the SFLT Discord server to proceed with scheduling. You can request a group chat with staff presence if necessary.</li>
-                        </ul>
-                    
-                        <h3>5.3. Response Time</h3>
-                        <ul>
-                            <li>You must respond to your opponent within 15 minutes from the time the first message was sent. Responding beyond this point will result in a no-show match loss.</li>
-                        </ul>
-                    
-                        <h3>5.4. Tournament Timing</h3>
-                        <ul>
-                            <li>A tournament round must be finished after 70 minutes + 45 minutes x number of extra maps since the start of the current round, including scheduling. Any matches played beyond this point will be invalidated and any unplayed teams will be disqualified from the tournament.
-                                <ul>
-                                    <li>5.4.1. A round is considered complete when all matches of that round are finished. Between rounds there is a 5-minute break before the next round commences.</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    
-                        <h3>5.5. Forfeiting Policy</h3>
-                        <ul>
-                            <li>5.5.1. Forfeiting during any round of an active cup will result in sanctions. The severity of these sanctions will depend on the reason for forfeiting. If no valid reason is provided, the forfeiting team will be blacklisted for one week starting from the day of the forfeiture. Repeated violations may result in longer blacklist durations.</li>
-                            <li>5.5.2. Attempting to evade the blacklist will result in additional sanctions, which may include extended blacklist duration or other penalties.</li>
-                        </ul>
-                    
-                        <h3>5.6. Match Format</h3>
-                        <ul>
-                            <li>5.6.1. Steel Flower Cup Series: All matches except for finals are played BO1. Finals will be played BO3.</li>
-                            <li>5.6.2. Steel Flower Seasonals: All matches up to Semi-finals are played BO1. Final match will be played BO3.</li>
-                        </ul>
-                    
-                        <h3>5.7. Map Selection</h3>
-                        <ul>
-                            <li>5.7.1. Available maps: Bureau, Canals, Soar, Grounded, Raid, Plaza, Port</li>
-                            <li>5.7.2. Veto processes:
-                                <ul>
-                                    <li>Best of 1: A Ban → B Ban → A Ban → B Ban → A Ban → B Ban → A Ban → B Ban → Decider [1]</li>
-                                    <li>Best of 3: A Ban → B Ban → A Pick [1] → B Pick [2] → A Ban → B Ban → A Ban → B Ban → Decider [3]</li>
-                                    <li>Best of 5: A Ban → B Ban → A Pick [1] → B Pick [2] → A Ban → B Ban → A Pick [3] → B Pick [4] → Decider [5]</li>
-                                </ul>
-                            </li>
-                            <li>5.7.3. Teams can mutually agree to play on any map without vetoing.</li>
-                        </ul>
-                    
-                        <h3>5.8. Server Selection</h3>
-                        <ul>
-                            <li>5.8.1. Teams can mutually agree to host several or all maps in a server of choice.</li>
-                            <li>5.8.2. If no agreement is reached, a coin flip must be performed in the main Discord server's private captain channel.</li>
-                        </ul>
-                    </section>
-                    <section class="doc-section" id="room-settings">
-                        <h2>Room Settings</h2>
-                        <div class="rules-table-container animate-pop">
-                            <table class="rules-table">
-                                <tr>
-                                    <th>Room Name</th>
-                                    <th>AS Cup</th>
-                                    <th>SFLT AS #X</th>
-                                    <th>AAAA vs BBBB</th>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>EU Cup</td>
-                                    <td>SFLT EU #X</td>
-                                    <td>AAAA vs BBBB</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td><strong>eg</strong> SFLT EU #1</td>
-                                    <td>EB vs G9</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>AS Seasonals</td>
-                                    <td>SFLT AS MMMM</td>
-                                    <td>AAAA vs BBBB</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td><strong>eg</strong> SFLT AS S01</td>
-                                    <td>EB vs EU</td>
-                                </tr>
-                                <tr>
-                                    <td>Password</td>
-                                    <td colspan="3">SFLTXXXXX (replace XXXXX with a random string)</td>
-                                </tr>
-                                <tr>
-                                    <td>Gamemode</td>
-                                    <td colspan="3">Tournament Mode</td>
-                                </tr>
-                                <tr>
-                                    <td>Coalition Max</td>
-                                    <td colspan="3">8</td>
-                                </tr>
-                                <tr>
-                                    <td>The Breach Max</td>
-                                    <td colspan="3">8</td>
-                                </tr>
-                                <tr>
-                                    <td>Round Time</td>
-                                    <td colspan="3">1m50s</td>
-                                </tr>
-                                <tr>
-                                    <td>Freeze Time</td>
-                                    <td colspan="3">On</td>
-                                </tr>
-                                <tr>
-                                    <td>Rounds to Win</td>
-                                    <td colspan="3">13</td>
-                                </tr>
-                                <tr>
-                                    <td>Start Money</td>
-                                    <td colspan="3">800</td>
-                                </tr>
-                                <tr>
-                                    <td>Infinite Buy Time</td>
-                                    <td colspan="3">OFF</td>
-                                </tr>
-                                <tr>
-                                    <td>Auto Balance</td>
-                                    <td colspan="3">OFF</td>
-                                </tr>
-                                <tr>
-                                    <td>Start with Armor</td>
-                                    <td colspan="3">OFF</td>
-                                </tr>
-                                <tr>
-                                    <td>Weapons</td>
-                                    <td colspan="3">Based on Ranked Faction Weapons, excluding Heavy Kevlar &amp; Helmet</td>
-                                </tr>
-                                <tr>
-                                    <td>Map</td>
-                                    <td colspan="3">As Decided</td>
-                                </tr>
-                                <tr>
-                                    <td>Server</td>
-                                    <td colspan="3">As Decided</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </section>
-
-                    <section class="doc-section" id="game">
-                        <h2>Section 6. Game</h2>
-                        <p>Players must follow the following rules during a match:</p>
-                        
-                        <h3>6.1. Pre-match</h3>
-                        <ul>
-                            <li>6.1.1. You must join the room within 15 minutes from the point the room code is provided to players. Teams can request overtime to allow the last player of their team to join, however this depends on the decision of the staff. If the team does not have at least 4 players beyond this point, it is treated as a no-show and a match loss.
-                                <ul>
-                                    <li>6.1.1a. If neither team shows up on time, both teams will be given a no-show match loss.</li>
-                                    <li>6.1.1b. A player can join at any time during the match as long as there is available space in the team (maximum of 5).</li>
-                                </ul>
-                            </li>
-                            <li>6.1.2. You must save a screenshot of the scoreboard before the match starts. This is used for reference purposes during match protests.</li>
-                        </ul>
-                    
-                        <h3>6.2. Knife round</h3>
-                        <ul>
-                            <li>6.2.1. A knife round happens before the main game. This helps determine the starting sides of each team. It is recommended to pick an accessible location (e.g. middle, long B) for the knife round in order to speed up the process.</li>
-                            <li>6.2.2. A knife round must be announced in all chat, followed by a match restart. All players must drop any droppable equipment during freeze time.</li>
-                            <li>6.2.3. During this time you must only use your melee weapon to attack. Inflicting damage using any other weapon to result in a knife round win to the opposing team, followed by a tournament warning.</li>
-                            <li>6.2.4. The winner of the knife round must declare their side before switching to their selected side. Continue to 6.3.</li>
-                        </ul>
-                    
-                        <h3>6.3. Match Start</h3>
-                        <ul>
-                            <li>A team representative must announce when the match is live before restarting the game, followed by a final announcement in all chat.</li>
-                        </ul>
-                    
-                        <h3>6.4. Chat Rules</h3>
-                        <ul>
-                            <li>During the match, you are not allowed to use all chat, unless deemed necessary. Violation of this rule will warrant a tournament warning to the team.</li>
-                        </ul>
-                    
-                        <h3>6.5. Administrative Commands</h3>
-                        <ul>
-                            <li>You are not allowed to use administrative commands during the match, unless deemed necessary. Violation of this rule will result in a match loss.</li>
-                        </ul>
-                    
-                        <h3>6.6. Staff Access</h3>
-                        <ul>
-                            <li>You are required to provide owner commands to any tournament staff in the match (admin, streamer).</li>
-                        </ul>
-                    
-                        <h3>6.7. Third Party Assistance</h3>
-                        <ul>
-                            <li>You must not use any support from third parties during the match. This includes but is not limited to: usage of third party software to gain advantage (cheating); gaining intel from an outside source during a match (ghosting); etc.</li>
-                        </ul>
-                    
-                        <h3>6.8. Collusion</h3>
-                        <ul>
-                            <li>Collusion and match-fixing (the deliberate act of dishonestly determining the results of a match before and when it is played) is not tolerated and is a non-negotiable bannable offense.</li>
-                        </ul>
-                    
-                        <h3>6.9. Forfeits</h3>
-                        <ul>
-                            <li>Unless specified otherwise, forfeiting or being given a match loss at any point during a match will result in the entire match being forfeited.</li>
-                        </ul>
-                    
-                        <p>Refer to <a href="#anti-cheat">Section 8</a> for anti-cheat rules.</p>
-                    </section>
-
-                    <section class="doc-section" id="post-match">
-                        <h2>Section 7. Post-Match</h2>
-                        <p>Players must follow the following rules after a match:</p>
-                        <ul>
-                            <li>7.1. You must send the screenshot of the scoreboard immediately after a match concludes to the SFLT Discord server results submission channel.</li>
-                            <li>7.2. Protests
-                                <ul>
-                                    <li>7.2.1. Teams can request a protest up to 10 minutes after the match has concluded.</li>
-                                    <li>7.2.2. You must provide details about your protest (reasons, time of occurrence, suspected player). Omitting details will result in request denial.</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </section>
-                    
-                    <section class="doc-section" id="anti-cheat">
-                        <h2>8. Anti-Cheat</h2>
-                        
-                        <h3>8.1. Recording rules</h3>
-                        <ul>
-                            <li>8.1.1. You must perform an anti-cheat recording at the beginning of every map and as soon as you join an ongoing game.</li>
-                            <li>8.1.2. During cups both teams can agree to omit this up until Quarterfinals, after which all players must submit their recordings without exceptions, unless specified otherwise.
-                                <ul>
-                                    <li>8.1.2.1 Omitting (or skipping) indicates a mutual agreement between both team captains to refrain from submitting any recordings for a particular match.</li>
-                                </ul>
-                            </li>
-                            <li>8.1.3. If you are listed as Restricted in the Restricted List, you must record the entirety of the game in addition to your base recording.
-                                <ul>
-                                    <li>8.1.3.1. You may be requested a full game recording or a handcam recording regardless of your status in the Restricted List.</li>
-                                </ul>
-                            </li>
-                            <li>8.1.4. You must allow up to 5GB of device storage to accommodate your recording.</li>
-                            <li>8.1.5. You must not delete your recording until you are permitted to by a tournament staff.</li>
-                        </ul>
-                    
-                        <h3>8.2. Recording guidelines (Preferred ruleset applied by default unless specified)</h3>
-                        <p>Preferred ruleset: 2023-24 Worlds</p>
-                        <p>The 2023-24 Critical Ops Worlds Championships are applied for all SFLT tournaments. The video examples are provided below:</p>
-                        <ul>
-                            <li>iPad OS: <a href="https://youtu.be/khni9wWutR0?si=Zb-NDsUgR6ZXGZXf" title="iPad OS Recording Example" target="_blank">Watch Example</a></li>
-                            <li>iPhone OS: <a href="https://youtu.be/d1uzA-GLph4?si=u_QV16ASwAQHqaUH" title="iPhone OS Recording Example" target="_blank">Watch Example</a></li>
-                            <li>Android: <a href="https://youtu.be/5fMIDIXv3Io?si=2hK9SD4HZV7TCGMX" title="Android Recording Example" target="_blank">Watch Example</a></li>
-                        </ul>
-                    
-                        <h3>8.3. Recording resolution</h3>
-                        <p>Your recording must be in 720p30 or higher.</p>
-                    
-                        <h3>8.4. Recording speedups</h3>
-                        <p>You are allowed to speed up your gameplay recording by up to 2x, or up to 4x if your recording is 12 rounds or higher. You are not allowed to speed up your first recording (settings recording).</p>
-                    
-                        <h3>8.5. Live monitoring</h3>
-                        <p>You are allowed to request to have your gameplay monitored in real-time by a staff member instead of performing your recording. This depends on the availability of the staff team. Please notify a staff member beforehand if you wish to be monitored.</p>
-                    
-                        <h3>8.6. Streaming</h3>
-                        <p>On some occasions you can request to stream your existing recording over Discord in case you are unable to upload your recording. Please notify a staff member if you would like to do this.</p>
-                    </section>
-
-                    <section class="doc-section" id="prizing">
-                        <h2>Section 9. Prizing</h2>
-                        
-                        <h3>9.1. In-game Prizing</h3>
-                        <ul>
-                            <li>In-game items (yellow credits, cases) prizes are provided by Critical Force</li>
-                            <li>Rewards will be added to your registered Critical Ops account at the end of each month</li>
-                            <li>Contact staff team for any prize-related inquiries</li>
-                        </ul>
-                    
-                        <h3>9.2. Monetary Prizing</h3>
-                        <ul>
-                            <li>For questions regarding monetary prizes or physical items, contact the staff team</li>
-                        </ul>
-                    
-                        <h3>9.3. Disqualification Consequences</h3>
-                        <ul>
-                            <li>Teams/players disqualified for cheating or rule violations must:
-                                <ul>
-                                    <li>Forfeit all prizes</li>
-                                    <li>Return equivalent value of any already-received rewards</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </section>
-                    <section class="doc-section" id="sanctions">
-                        <h2>Section 10. Sanctions</h2>
-                        
-                        <p>Failure to abide by any regulation(s) mentioned in this document will result in appropriate sanctions depending on severity.</p>
-                        
-                        <ul class="sanctions-list">
-                            <li>Event Warning</li>
-                            <li>Organizer Warning</li>
-                            <li>Rematch</li>
-                            <li>Match Loss (forced forfeit for one match)</li>
-                            <li>Disqualification (removal from the tournament)</li>
-                            <li>Temporary/Permanent Ban from Events</li>
-                        </ul>
-                    </section>
-                </div>
+          <div class="rules-content">
+            <div class="document-header animate-slide">
+              <h1>Steel Flower Critical Ops Global Tournament Regulations</h1>
+              <div class="version-info">
+                <span>Version 1</span>
+                
+              </div>
             </div>
-        </div>
-
-        <script>
-            let currentSection = 'home';
-            const animationDuration = 300;
-            let originalData = [];
-            let searchTimeout;
-            let sortDirection = 'asc';
-            let sortColumn = 0;
         
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                });
+            <section class="doc-section active" id="disclaimer">
+              <h2>Section 1. Disclaimer</h2>
+              <p>By participating in an event hosted by Steel Flower Tournaments (SFLT, Organizer), you agree to:</p>
+              
+              <ul>
+                <li>Comply with the contents of this document</li>
+                <li>Adhere to Critical Ops <a href="https://criticalopsgame.com/terms/" target="_blank">Terms of Use</a></li>
+                <li>Follow the Critical Ops <a href="https://criticalopsgame.com/code-conduct/" target="_blank">Code of Conduct</a></li>
+              </ul>
+          
+              <h3>Data Collection</h3>
+              <p>You consent to Steel Flower Tournaments collecting the following information for management purposes:</p>
+              <ul>
+                <li><strong>Personal Information:</strong>
+                  <ul>
+                    <li>Nickname</li>
+                    <li>In-Game Nickname</li>
+                    <li>In-Game Identifier (ID)</li>
+                  </ul>
+                </li>
+                <li><strong>Device Information:</strong>
+                  <ul>
+                    <li>Make &amp; Model</li>
+                    <li>Serial Number</li>
+                    <li>OS Version</li>
+                  </ul>
+                </li>
+              </ul>
+          
+              <h3>Data Retention</h3>
+              <ul>
+                <li>Collected information will be stored for up to 72 hours</li>
+                <li>Previously public information is exempt from this retention policy</li>
+              </ul>
+          
+              <h3>1.1. Code of Conduct</h3>
+              <p>All participants must maintain appropriate behavior towards:</p>
+              <ul>
+                <li>Players</li>
+                <li>Team representatives</li>
+                <li>Staff members</li>
+                <li>Community members</li>
+              </ul>
+              
+              <p>Prohibited behavior includes but is not limited to:</p>
+              <ul>
+                <li>Harassment</li>
+                <li>Bigotry</li>
+                <li>Racism</li>
+                <li>Any disrespectful conduct</li>
+              </ul>
+              <p>Violations will result in sanctions determined by the admin team.</p>
+          
+              <h3>General Provisions</h3>
+              <ul>
+                <li>These regulations apply to all Critical Ops events organized by SFLT and partners unless otherwise specified</li>
+                <li>Steel Flower Tournaments reserves the right to modify this document without prior notice</li>
+              </ul>
+            </section>
+        
+            <section class="doc-section" id="eligibility">
+              <h2>Section 2. Eligibility</h2>
+              <p>You must meet the following requirements in order to participate and receive prizes from a SFLT event.</p>
+          
+              <h3>2.1. Account Verification</h3>
+              <ul>
+                <li>You must use a verified Critical Ops account linked to a social media account to participate.</li>
+              </ul>
+          
+              <h3>2.2. Game Statistics</h3>
+              <ul>
+                <li>Your account must have:
+                  <ul>
+                    <li>Minimum 500 recorded kills in Quick &amp; Custom Games</li>
+                    <li>Minimum 500 recorded kills in Ranked Games</li>
+                    <li>Total minimum of 1000 combined kills</li>
+                  </ul>
+                </li>
+              </ul>
+          
+              <h3>2.3. Discord Integration</h3>
+              <ul>
+                <li>Each account must be bound to a Discord account.</li>
+                <li>Your Discord name and discriminator number must be included with your Critical Ops account details during registration.</li>
+              </ul>
+          
+              <h3>2.4. Restricted Players</h3>
+              <ul>
+                <li>Players listed in the SFLT Restricted List with Banned status are prohibited from participating.</li>
+              </ul>
+          
+              <h3>2.5. Eligibility Exceptions</h3>
+              <ul>
+                <li>Accounts not meeting requirements (2.1, 2.2, 2.3) cannot participate unless approved by a tournament administrator.</li>
+              </ul>
+          
+              <h3>2.6. Registration Details</h3>
+              <ul>
+                <li>You must provide accurate account information (In-Game Name and Identifier) during registration.
+                </li>
+                <li>Failure to provide required information will result in loss of eligibility.</li>
+              </ul>
+          
+              <h3>2.7. In-Game Bans</h3>
+              <ul>
+                <li>Any player with a banned account is permanently ineligible to participate.</li>
+              </ul>
+            </section>
+
+
+            <section class="doc-section" id="roster-rules">
+              <h2>Section 3. Roster</h2>
+              <p>Each team must register a roster before participating in an event.</p>
+          
+              <h3>3.1. Registration Deadline</h3>
+              <ul>
+                <li>Unless specified otherwise, a roster must be registered 1 hour before the commencement of an event.</li>
+              </ul>
+          
+              <h3>3.2. Roster Composition</h3>
+              <ul>
+                <li>Each roster must contain a minimum of five (5) players.
+                  <ul>
+                    <li>3.2.1. Each roster can include an additional two (2) substitutes. During registration these must be separated from the main lineup; if not separated, the top 5 players on the list will be treated as mains by default.</li>
+                  </ul>
+                </li>
+              </ul>
+          
+              <h3>3.3. Roster Modifications</h3>
+              <ul>
+                <li>Each roster can be modified (player additions, removal or replacement) by the respective team's representative(s) for up to two (2) times throughout the event.
+                  <ul>
+                    <li>3.3.1. Roster changes are only valid before the credentials of a match are provided. Changes beyond this point can be allowed only with mutual agreement.</li>
+                  </ul>
+                </li>
+              </ul>
+          
+              <h3>3.4. Player Exclusivity</h3>
+              <ul>
+                <li>A player must only be in one roster at any given time.</li>
+              </ul>
+          
+              <h3>3.5. Team Branding</h3>
+              <ul>
+                <li>During registration you can provide a team logo. The use of inappropriate team names and logos will result in tournament bans, unless specified otherwise.</li>
+              </ul>
+            </section>
+
+            <section class="doc-section" id="devices-software">
+              <h2>Section 4. Devices and Software</h2>
+              <p>Players must use the following devices and software during an event.</p>
+          
+              <h3>4.1. Allowed Devices</h3>
+              <ul>
+                <li>You are allowed to use mobile devices (iOS and Android smartphones and tablets) to participate.
+                  <ul>
+                    <li>4.1.1. Participating using devices on unsupported platforms (e.g. PC, Mac with or without emulator) is prohibited.</li>
+                  </ul>
+                </li>
+              </ul>
+          
+              <h3>4.2. Operating System</h3>
+              <ul>
+                <li>You must update your device to the latest OS version your device supports (at least Android 13 or iOS 18.1). When in doubt, contact Staff.</li>
+              </ul>
+          
+              <h3>4.3. Game Client</h3>
+              <ul>
+                <li>Unless specified, you must update your Critical Ops game client to the latest live version available.</li>
+              </ul>
+          
+              <h3>4.4. Network Restrictions</h3>
+              <ul>
+                <li>You are not allowed to use any Virtual Private Networks (VPN) or proxy servers to play.</li>
+              </ul>
+          
+              <h3>4.5. Game Boosters</h3>
+              <ul>
+                <li>In case your device supports game booster software, you must only use the software that comes with your device (e.g. Samsung Game Launcher, ASUS Armoury Crate, Xiaomi Game Turbo, HONOR Game Booster, etc.). When in doubt, contact Staff.</li>
+              </ul>
+          
+              <h3>4.6. Device Modifications</h3>
+              <ul>
+                <li>The use of jailbroken devices is prohibited.</li>
+              </ul>
+            </section>
+
+            <section class="doc-section" id="scheduling-match-organization">
+              <h2>Section 5. Scheduling and Match Organization</h2>
+              <p>Players must follow the following rules during scheduling and match organization.</p>
+          
+              <h3>5.1. Event Presence</h3>
+              <ul>
+                <li>You must be present at the start of the event.</li>
+              </ul>
+          
+              <h3>5.2. Communication</h3>
+              <ul>
+                <li>Unless specified, your team captain or you (if you are your team captain) must use Discord DMs or private captain channels in the SFLT Discord server to proceed with scheduling. You can request a group chat with staff presence if necessary.</li>
+              </ul>
+          
+              <h3>5.3. Response Time</h3>
+              <ul>
+                <li>You must respond to your opponent within 15 minutes from the time the first message was sent. Responding beyond this point will result in a no-show match loss.</li>
+              </ul>
+          
+              <h3>5.4. Tournament Timing</h3>
+              <ul>
+                <li>A tournament round must be finished after 70 minutes + 45 minutes x number of extra maps since the start of the current round, including scheduling. Any matches played beyond this point will be invalidated and any unplayed teams will be disqualified from the tournament.
+                  <ul>
+                    <li>5.4.1. A round is considered complete when all matches of that round are finished. Between rounds there is a 5-minute break before the next round commences.</li>
+                  </ul>
+                </li>
+              </ul>
+          
+              <h3>5.5. Forfeiting Policy</h3>
+              <ul>
+                <li>5.5.1. Forfeiting during any round of an active cup will result in sanctions. The severity of these sanctions will depend on the reason for forfeiting. If no valid reason is provided, the forfeiting team will be blacklisted for one week starting from the day of the forfeiture. Repeated violations may result in longer blacklist durations.</li>
+                <li>5.5.2. Attempting to evade the blacklist will result in additional sanctions, which may include extended blacklist duration or other penalties.</li>
+              </ul>
+          
+              <h3>5.6. Match Format</h3>
+              <ul>
+                <li>5.6.1. Steel Flower Cup Series: All matches except for finals are played BO1. Finals will be played BO3.</li>
+                <li>5.6.2. Steel Flower Seasonals: All matches up to Semi-finals are played BO1. Final match will be played BO3.</li>
+              </ul>
+          
+              <h3>5.7. Map Selection</h3>
+              <ul>
+                <li>5.7.1. Available maps: Bureau, Canals, Soar, Grounded, Raid, Plaza, Port</li>
+                <li>5.7.2. Veto processes:
+                  <ul>
+                    <li>Best of 1: A Ban → B Ban → A Ban → B Ban → A Ban → B Ban → A Ban → B Ban → Decider [1]</li>
+                    <li>Best of 3: A Ban → B Ban → A Pick [1] → B Pick [2] → A Ban → B Ban → A Ban → B Ban → Decider [3]</li>
+                    <li>Best of 5: A Ban → B Ban → A Pick [1] → B Pick [2] → A Ban → B Ban → A Pick [3] → B Pick [4] → Decider [5]</li>
+                  </ul>
+                </li>
+                <li>5.7.3. Teams can mutually agree to play on any map without vetoing.</li>
+              </ul>
+          
+              <h3>5.8. Server Selection</h3>
+              <ul>
+                <li>5.8.1. Teams can mutually agree to host several or all maps in a server of choice.</li>
+                <li>5.8.2. If no agreement is reached, a coin flip must be performed in the main Discord server's private captain channel.</li>
+              </ul>
+            </section>
+            <section class="doc-section" id="room-settings">
+              <h2>Room Settings</h2>
+              <div class="rules-table-container animate-pop">
+                <table class="rules-table">
+                  <tr>
+                    <th>Room Name</th>
+                    <th>AS Cup</th>
+                    <th>SFLT AS #X</th>
+                    <th>AAAA vs BBBB</th>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>EU Cup</td>
+                    <td>SFLT EU #X</td>
+                    <td>AAAA vs BBBB</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td><strong>eg</strong> SFLT EU #1</td>
+                    <td>EB vs G9</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>AS Seasonals</td>
+                    <td>SFLT AS MMMM</td>
+                    <td>AAAA vs BBBB</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td><strong>eg</strong> SFLT AS S01</td>
+                    <td>EB vs EU</td>
+                  </tr>
+                  <tr>
+                    <td>Password</td>
+                    <td colspan="3">SFLTXXXXX (replace XXXXX with a random string)</td>
+                  </tr>
+                  <tr>
+                    <td>Gamemode</td>
+                    <td colspan="3">Tournament Mode</td>
+                  </tr>
+                  <tr>
+                    <td>Coalition Max</td>
+                    <td colspan="3">8</td>
+                  </tr>
+                  <tr>
+                    <td>The Breach Max</td>
+                    <td colspan="3">8</td>
+                  </tr>
+                  <tr>
+                    <td>Round Time</td>
+                    <td colspan="3">1m50s</td>
+                  </tr>
+                  <tr>
+                    <td>Freeze Time</td>
+                    <td colspan="3">On</td>
+                  </tr>
+                  <tr>
+                    <td>Rounds to Win</td>
+                    <td colspan="3">13</td>
+                  </tr>
+                  <tr>
+                    <td>Start Money</td>
+                    <td colspan="3">800</td>
+                  </tr>
+                  <tr>
+                    <td>Infinite Buy Time</td>
+                    <td colspan="3">OFF</td>
+                  </tr>
+                  <tr>
+                    <td>Auto Balance</td>
+                    <td colspan="3">OFF</td>
+                  </tr>
+                  <tr>
+                    <td>Start with Armor</td>
+                    <td colspan="3">OFF</td>
+                  </tr>
+                  <tr>
+                    <td>Weapons</td>
+                    <td colspan="3">Based on Ranked Faction Weapons, excluding Heavy Kevlar &amp; Helmet</td>
+                  </tr>
+                  <tr>
+                    <td>Map</td>
+                    <td colspan="3">As Decided</td>
+                  </tr>
+                  <tr>
+                    <td>Server</td>
+                    <td colspan="3">As Decided</td>
+                  </tr>
+                </table>
+              </div>
+            </section>
+
+            <section class="doc-section" id="game">
+              <h2>Section 6. Game</h2>
+              <p>Players must follow the following rules during a match:</p>
+              
+              <h3>6.1. Pre-match</h3>
+              <ul>
+                <li>6.1.1. You must join the room within 15 minutes from the point the room code is provided to players. Teams can request overtime to allow the last player of their team to join, however this depends on the decision of the staff. If the team does not have at least 4 players beyond this point, it is treated as a no-show and a match loss.
+                  <ul>
+                    <li>6.1.1a. If neither team shows up on time, both teams will be given a no-show match loss.</li>
+                    <li>6.1.1b. A player can join at any time during the match as long as there is available space in the team (maximum of 5).</li>
+                  </ul>
+                </li>
+                <li>6.1.2. You must save a screenshot of the scoreboard before the match starts. This is used for reference purposes during match protests.</li>
+              </ul>
+          
+              <h3>6.2. Knife round</h3>
+              <ul>
+                <li>6.2.1. A knife round happens before the main game. This helps determine the starting sides of each team. It is recommended to pick an accessible location (e.g. middle, long B) for the knife round in order to speed up the process.</li>
+                <li>6.2.2. A knife round must be announced in all chat, followed by a match restart. All players must drop any droppable equipment during freeze time.</li>
+                <li>6.2.3. During this time you must only use your melee weapon to attack. Inflicting damage using any other weapon to result in a knife round win to the opposing team, followed by a tournament warning.</li>
+                <li>6.2.4. The winner of the knife round must declare their side before switching to their selected side. Continue to 6.3.</li>
+              </ul>
+          
+              <h3>6.3. Match Start</h3>
+              <ul>
+                <li>A team representative must announce when the match is live before restarting the game, followed by a final announcement in all chat.</li>
+              </ul>
+          
+              <h3>6.4. Chat Rules</h3>
+              <ul>
+                <li>During the match, you are not allowed to use all chat, unless deemed necessary. Violation of this rule will warrant a tournament warning to the team.</li>
+              </ul>
+          
+              <h3>6.5. Administrative Commands</h3>
+              <ul>
+                <li>You are not allowed to use administrative commands during the match, unless deemed necessary. Violation of this rule will result in a match loss.</li>
+              </ul>
+          
+              <h3>6.6. Staff Access</h3>
+              <ul>
+                <li>You are required to provide owner commands to any tournament staff in the match (admin, streamer).</li>
+              </ul>
+          
+              <h3>6.7. Third Party Assistance</h3>
+              <ul>
+                <li>You must not use any support from third parties during the match. This includes but is not limited to: usage of third party software to gain advantage (cheating); gaining intel from an outside source during a match (ghosting); etc.</li>
+              </ul>
+          
+              <h3>6.8. Collusion</h3>
+              <ul>
+                <li>Collusion and match-fixing (the deliberate act of dishonestly determining the results of a match before and when it is played) is not tolerated and is a non-negotiable bannable offense.</li>
+              </ul>
+          
+              <h3>6.9. Forfeits</h3>
+              <ul>
+                <li>Unless specified otherwise, forfeiting or being given a match loss at any point during a match will result in the entire match being forfeited.</li>
+              </ul>
+          
+              <p>Refer to <a href="#anti-cheat">Section 8</a> for anti-cheat rules.</p>
+            </section>
+
+            <section class="doc-section" id="post-match">
+              <h2>Section 7. Post-Match</h2>
+              <p>Players must follow the following rules after a match:</p>
+              <ul>
+                <li>7.1. You must send the screenshot of the scoreboard immediately after a match concludes to the SFLT Discord server results submission channel.</li>
+                <li>7.2. Protests
+                  <ul>
+                    <li>7.2.1. Teams can request a protest up to 10 minutes after the match has concluded.</li>
+                    <li>7.2.2. You must provide details about your protest (reasons, time of occurrence, suspected player). Omitting details will result in request denial.</li>
+                  </ul>
+                </li>
+              </ul>
+            </section>
+            
+            <section class="doc-section" id="anti-cheat">
+              <h2>8. Anti-Cheat</h2>
+              
+              <h3>8.1. Recording rules</h3>
+              <ul>
+                <li>8.1.1. You must perform an anti-cheat recording at the beginning of every map and as soon as you join an ongoing game.</li>
+                <li>8.1.2. During cups both teams can agree to omit this up until Quarterfinals, after which all players must submit their recordings without exceptions, unless specified otherwise.
+                  <ul>
+                    <li>8.1.2.1 Omitting (or skipping) indicates a mutual agreement between both team captains to refrain from submitting any recordings for a particular match.</li>
+                  </ul>
+                </li>
+                <li>8.1.3. If you are listed as Restricted in the Restricted List, you must record the entirety of the game in addition to your base recording.
+                  <ul>
+                    <li>8.1.3.1. You may be requested a full game recording or a handcam recording regardless of your status in the Restricted List.</li>
+                  </ul>
+                </li>
+                <li>8.1.4. You must allow up to 5GB of device storage to accommodate your recording.</li>
+                <li>8.1.5. You must not delete your recording until you are permitted to by a tournament staff.</li>
+              </ul>
+          
+              <h3>8.2. Recording guidelines (Preferred ruleset applied by default unless specified)</h3>
+              <p>Preferred ruleset: 2023-24 Worlds</p>
+              <p>The 2023-24 Critical Ops Worlds Championships are applied for all SFLT tournaments. The video examples are provided below:</p>
+              <ul>
+                <li>iPad OS: <a href="https://youtu.be/khni9wWutR0?si=Zb-NDsUgR6ZXGZXf" title="iPad OS Recording Example" target="_blank">Watch Example</a></li>
+                <li>iPhone OS: <a href="https://youtu.be/d1uzA-GLph4?si=u_QV16ASwAQHqaUH" title="iPhone OS Recording Example" target="_blank">Watch Example</a></li>
+                <li>Android: <a href="https://youtu.be/5fMIDIXv3Io?si=2hK9SD4HZV7TCGMX" title="Android Recording Example" target="_blank">Watch Example</a></li>
+              </ul>
+          
+              <h3>8.3. Recording resolution</h3>
+              <p>Your recording must be in 720p30 or higher.</p>
+          
+              <h3>8.4. Recording speedups</h3>
+              <p>You are allowed to speed up your gameplay recording by up to 2x, or up to 4x if your recording is 12 rounds or higher. You are not allowed to speed up your first recording (settings recording).</p>
+          
+              <h3>8.5. Live monitoring</h3>
+              <p>You are allowed to request to have your gameplay monitored in real-time by a staff member instead of performing your recording. This depends on the availability of the staff team. Please notify a staff member beforehand if you wish to be monitored.</p>
+          
+              <h3>8.6. Streaming</h3>
+              <p>On some occasions you can request to stream your existing recording over Discord in case you are unable to upload your recording. Please notify a staff member if you would like to do this.</p>
+            </section>
+
+            <section class="doc-section" id="prizing">
+              <h2>Section 9. Prizing</h2>
+              
+              <h3>9.1. In-game Prizing</h3>
+              <ul>
+                <li>In-game items (yellow credits, cases) prizes are provided by Critical Force</li>
+                <li>Rewards will be added to your registered Critical Ops account at the end of each month</li>
+                <li>Contact staff team for any prize-related inquiries</li>
+              </ul>
+          
+              <h3>9.2. Monetary Prizing</h3>
+              <ul>
+                <li>For questions regarding monetary prizes or physical items, contact the staff team</li>
+              </ul>
+          
+              <h3>9.3. Disqualification Consequences</h3>
+              <ul>
+                <li>Teams/players disqualified for cheating or rule violations must:
+                  <ul>
+                    <li>Forfeit all prizes</li>
+                    <li>Return equivalent value of any already-received rewards</li>
+                  </ul>
+                </li>
+              </ul>
+            </section>
+            <section class="doc-section" id="sanctions">
+              <h2>Section 10. Sanctions</h2>
+              
+              <p>Failure to abide by any regulation(s) mentioned in this document will result in appropriate sanctions depending on severity.</p>
+              
+              <ul class="sanctions-list">
+                <li>Event Warning</li>
+                <li>Organizer Warning</li>
+                <li>Rematch</li>
+                <li>Match Loss (forced forfeit for one match)</li>
+                <li>Disqualification (removal from the tournament)</li>
+                <li>Temporary/Permanent Ban from Events</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div> <!-- End of .container -->
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="social-icons">
+          <a href="https://discord.gg/encdzGBrND" target="_blank" class="social-icon">
+            <i class="fab fa-discord"></i>
+          </a>
+          <a href="https://www.twitter.com/SteelFlowerGG" target="_blank" class="social-icon">
+            <i class="fab fa-x-twitter"></i>
+          </a>
+          <a href="https://www.youtube.com/@SteelFlower" target="_blank" class="social-icon">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+        <div class="copyright">
+          © 2020 Steel Flower Organisation. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        let currentSection = 'home';
+        const animationDuration = 300;
+        let originalData = [];
+        let searchTimeout;
+        let sortDirection = 'asc';
+        let sortColumn = 0;
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
-        
-            // Rules section navigation
-            document.querySelectorAll('.rules-nav .nav-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const sectionId = this.dataset.section;
-                    document.querySelectorAll('.rules-nav .nav-item').forEach(nav => 
-                        nav.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const targetSection = document.getElementById(sectionId);
-                    if (targetSection) {
-                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                });
-            });
-        
-            function showSection(sectionId) {
-            if (sectionId === currentSection) return;
-                showLoading();
+        });
+    });
 
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-                section.classList.add('section-hidden');
-            });
-
-            currentSection = sectionId;
-            document.querySelectorAll('.nav-button').forEach(button => {
-                button.classList.remove('active');
-                const btnSection = button.querySelector('span').textContent.toLowerCase().trim();
-                if (btnSection === sectionId) button.classList.add('active');
-            });
-
-            setTimeout(() => {
-                const activeSection = document.getElementById(`${sectionId}-section`);
-                activeSection.classList.remove('section-hidden');
-                activeSection.classList.add('active');
-
-        // Update the URL based on the section
-                if (sectionId === 'blacklist') {
-                    updateURL('/blacklist');
-                if (originalData.length === 0) {
-                    fetchBlacklistData().then(() => {
-                        createStatusFilter();
-                        setupLiveSearch();
-                    });
-                }
-            } else if (sectionId === 'rules') {
-                updateURL('/rules');
-            // Reset rules navigation
-                document.querySelector('.rules-nav .nav-item').click();
-            } else {
-                updateURL('/'); // Home section
+    // Rules section navigation
+    document.querySelectorAll('.rules-nav .nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const sectionId = this.dataset.section;
+            document.querySelectorAll('.rules-nav .nav-item').forEach(nav => 
+                nav.classList.remove('active'));
+            this.classList.add('active');
+            
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            hideLoading();
-            }, animationDuration);
+        });
+    });
+
+    async function loadTournaments() {
+    showLoading();
+    try {
+        const response = await fetch('/api/tournaments');
+        const data = await response.json();
+        const container = document.querySelector('.tournaments-grid');
+        container.innerHTML = '';
+        
+        let upcoming = 0;
+        let completed = 0;
+        
+        data.data.forEach(tournament => {
+            const card = document.createElement('div');
+            card.className = 'tournament-card animate-slide';
+            card.dataset.id = tournament.id; 
+            const progress = (tournament.registered_teams / tournament.max_teams) * 100;
+            
+            // Handle missing start date
+            const startDate = tournament.start_date ? 
+                new Date(tournament.start_date).toLocaleDateString() : 'N/A';
+            
+            // Modified status calculation
+            const status = tournament.start_date ? 
+                (new Date(tournament.start_date) > new Date() ? 'Upcoming' : 'Completed') : 'N/A';
+
+            if(status === 'Upcoming') upcoming++;
+            if(status === 'Completed') completed++;
+            
+            card.innerHTML = `
+                <div class="tournament-header">
+                <div class="tournament-status ${status.toLowerCase() === 'upcoming' ? 'status-upcoming' : 'status-completed'}">
+                    ${status}
+                </div>
+                <h3 class="tournament-title">${tournament.name}</h3>
+                <div class="tournament-meta">
+                    <span class="tournament-region">${tournament.region}</span>
+                    <span class="tournament-format">${tournament.format}</span>
+                </div>
+            </div>
+            <div class="tournament-detail">
+                <span class="detail-label">Starts:</span>
+                <span class="detail-value">${startDate}</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="tournament-detail">
+                <span class="detail-label">Teams:</span>
+                <span class="detail-value">${tournament.registered_teams}/${tournament.max_teams}</span>
+            </div>
+        `;
+            
+            container.appendChild(card);
+        });
+        
+        document.getElementById('totalTournaments').textContent = data.data.length;
+        document.getElementById('upcomingCount').textContent = upcoming;
+        document.getElementById('completedCount').textContent = completed;
+    } catch(error) {
+        console.error('Error loading tournaments:', error);
+    }
+    hideLoading();
+}
+    function showSection(sectionId) {
+        showLoading();
+        
+        // Hide all sections
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+            section.style.display = 'none';
+        });
+
+        // Update nav buttons
+        document.querySelectorAll('.nav-button').forEach(button => {
+            button.classList.remove('active');
+            if(button.querySelector('span').textContent.toLowerCase() === sectionId) {
+                button.classList.add('active');
+            }
+        });
+
+        // Show selected section
+        const activeSection = document.getElementById(`${sectionId}-section`);
+        if(activeSection) {
+            activeSection.style.display = 'block';
+            setTimeout(() => {
+                activeSection.classList.add('active');
+            }, 50);
+        }
+
+        // Load dynamic content if needed
+        if (sectionId === 'tournaments') {
+            updateURL('/tournaments');
+            loadTournaments();
+        }
+
+        if (sectionId === 'blacklist' && originalData.length === 0) {
+            updateURL('/blacklist');
+            fetchBlacklistData();
         }
         
-            function showComingSoon(sectionId) {
-                showSection(sectionId);
-            }
+        // Scroll to top
+        window.scrollTo(0, 0);
         
-            async function fetchBlacklistData() {
+        hideLoading();
+    }
+
+    async function fetchBlacklistData() {
                 showLoading();
                 try {
                     const response = await fetch('/api/blacklist');
@@ -750,17 +859,30 @@
                     updateStats(filteredData);
                 }, 300);
             });
+
+            document.getElementById('tournamentSearch').addEventListener('input', function() {
+                const filter = this.value.toLowerCase();
+                const cards = document.querySelectorAll('.tournament-card');
+        
+                cards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    card.style.display = text.includes(filter) ? 'block' : 'none';
+                });
+            });
         
             function createStatusFilter() {
-                const filterHTML = `
-                    <div class="status-filter">
-                        <button class="filter-btn active" onclick="filterTable('all')">All</button>
-                        <button class="filter-btn" onclick="filterTable('active')">Active</button>
-                        <button class="filter-btn" onclick="filterTable('inactive')">Inactive</button>
-                    </div>
-                `;
-                document.querySelector('#blacklist-section').insertAdjacentHTML('afterbegin', filterHTML);
-            }
+    // Check if filter already exists
+            if(document.querySelector('.status-filter')) return;
+    
+            const filterHTML = `
+                <div class="status-filter">
+                    <button class="filter-btn active" onclick="filterTable('all')">All</button>
+                    <button class="filter-btn" onclick="filterTable('active')">Active</button>
+                    <button class="filter-btn" onclick="filterTable('inactive')">Inactive</button>
+                </div>
+            `;
+            document.querySelector('#blacklist-section').insertAdjacentHTML('afterbegin', filterHTML);
+        }
         
             function filterTable(status) {
                 const filtered = originalData.filter(entry => 
@@ -850,8 +972,8 @@
                     if(e.ctrlKey) {
                         if(e.key === '1') showSection('home');
                         if(e.key === '2') showSection('blacklist');
-                        if(e.key === '3') showComingSoon('tournaments');
-                        if(e.key === '4') showComingSoon('rules');
+                        if(e.key === '3') showSection('tournaments');
+                        if(e.key === '4') showSection('rules');
                     }
                     if(e.key === 'Escape') {
                         document.getElementById('playerModal').style.display = 'none';
@@ -914,24 +1036,23 @@
                 fetchBlacklistData();
                 setupKeyboardShortcuts();
                 document.body.insertAdjacentHTML('afterbegin', '<div class="scroll-progress"></div>');
-        
-                // Initialize rules section observer
+
+        // Initialize rules section observer
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
-                    if(entry.isIntersecting) {
-                        entry.target.style.opacity = "1";
-                        entry.target.style.transform = "translateY(0)";
-                    }
-                });
+                        if(entry.isIntersecting) {
+                            entry.target.style.opacity = "1";
+                            entry.target.style.transform = "translateY(0)";
+                        }
+                    });
                 }, {
                     threshold: 0.1,
                     rootMargin: "0px 0px -100px 0px"
-            });
+                });
 
-document.querySelectorAll('.doc-section').forEach(section => {
-    observer.observe(section);
-});
-
+                document.querySelectorAll('.doc-section').forEach(section => {
+                    observer.observe(section);
+                });
             });
         
             window.addEventListener('popstate', (event) => {
@@ -944,6 +1065,14 @@ document.querySelectorAll('.doc-section').forEach(section => {
         
             document.querySelector('.close').addEventListener('click', () => {
                 document.getElementById('playerModal').style.display = 'none';
+            });
+
+            document.querySelector('.tournaments-grid').addEventListener('click', (e) => {
+                const card = e.target.closest('.tournament-card');
+                if (card) {
+                    const tournamentName = card.querySelector('.tournament-title').textContent;
+                    window.location.href = `/tournaments/${encodeURIComponent(tournamentName)}`;
+                }
             });
         
             window.addEventListener('click', (event) => {
@@ -961,89 +1090,6 @@ document.querySelectorAll('.doc-section').forEach(section => {
         
             const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
             showSection('home');
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Disable right-click
-                document.addEventListener('contextmenu', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
-            
-                // Disable text selection
-                document.addEventListener('selectstart', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
-            
-                // Block Ctrl+C, Ctrl+V, Ctrl+A
-                document.addEventListener('keydown', function(e) {
-                    if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 65)) {
-                        e.preventDefault();
-                        return false;
-                    }
-                });
-            });
-            </script>
-            <style>
-                /* Add these CSS rules */
-                .rules-content {
-                    user-select: none;
-                    -webkit-user-select: none;
-                    -moz-user-select: none;
-                    -ms-user-select: none;
-                }
-                
-                .rules-content::selection {
-                    background: transparent;
-                }
-                
-                .rules-content::-moz-selection {
-                    background: transparent;
-                }
-                
-                .protection-overlay {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: 9999;
-                    pointer-events: none;
-                }
-                
-                .protection-warning {
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: rgba(0,0,0,0.9);
-                    padding: 20px;
-                    border: 2px solid var(--gold-primary);
-                    border-radius: 8px;
-                    text-align: center;
-                    display: none;
-                    z-index: 10000;
-                }
-                </style>
-
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="social-icons">
-                <a href="https://discord.gg/encdzGBrND" target="_blank" class="social-icon">
-                    <i class="fab fa-discord"></i>
-                </a>
-                <a href="https://www.twitter.com/SteelFlowerGG" target="_blank" class="social-icon">
-                    <i class="fab fa-x-twitter"></i>
-                </a>
-                <a href="https://www.youtube.com/@SteelFlower" target="_blank" class="social-icon">
-                    <i class="fab fa-youtube"></i>
-                </a>
-            </div>
-            <div class="copyright">
-                © 2020 Steel Flower Organisation. All rights reserved.
-            </div>
-        </div>
-    </footer>
-</body>
+    </script>
+  </body>
 </html>
