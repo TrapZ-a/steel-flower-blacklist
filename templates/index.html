@@ -24,14 +24,14 @@
             <span>Home</span>
             <div class="nav-line"></div>
           </button>
-          <button class="nav-button" onclick="showSection('blacklist')">
+          <button class="nav-button" onclick="window.location.href='/blacklist'">
             <span>Blacklist</span>
             <div class="nav-line"></div>
           </button>
           <button class="nav-button" onclick="showSection('tournaments')">
             <span>Tournaments</span>
             <div class="nav-line"></div>
-            </button>
+          </button>
           <button class="nav-button" onclick="showSection('rules')">
             <span>Rules</span>
             <div class="nav-line"></div>
@@ -47,72 +47,7 @@
         </div>
       </div>
 
-      <!-- Blacklist Section -->
-      <div id="blacklist-section" class="content-section">
-        <h1 class="animate-pop">STEEL FLOWER BLACKLIST</h1>
-        <div class="description animate-slide">
-          <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
-        </div>
-        <div class="search-box">
-          <label for="searchInput" class="sr-only">Search</label>
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Search by IGN, Game ID, or Reason..."
-            onfocus="this.placeholder=''"
-            onblur="this.placeholder='Search by IGN, Game ID, or Reason...'"
-          >
-          <div class="search-tools">
-            <button class="search-clear" aria-label="Clear search" onclick="clearSearch()">&times;</button>
-          </div>
-        </div>
-        <div class="stats-bar">
-          <span>Total Entries: <span id="totalCount">0</span></span>
-          <span>Active: <span id="activeCount">0</span></span>
-          <span>Inactive: <span id="inactiveCount">0</span></span>
-        </div>
-        <table id="blacklistTable">
-          <thead>
-            <tr>
-              <th scope="col">IGN</th>
-              <th scope="col">GAME ID</th>
-              <th scope="col">REASON</th>
-              <th scope="col">STATUS</th>
-              <th scope="col">DATE ADDED</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-        <div id="playerModal" class="modal" role="dialog" aria-labelledby="modalIGN" aria-hidden="true">
-          <div class="modal-content">
-            <button class="close" aria-label="Close modal">&times;</button>
-            <div class="profile-header">
-              <h2 id="modalIGN" class="animate-pop"></h2>
-            </div>
-            <div class="profile-details">
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-id-badge" aria-hidden="true"></i> Discord ID</span>
-                <span id="discordID" class="detail-value"></span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-gamepad" aria-hidden="true"></i> Game ID</span>
-                <span id="modalGameID" class="detail-value"></span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-power-off" aria-hidden="true"></i> Status</span>
-                <span id="modalStatus" class="detail-value"></span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Date Added</span>
-                <span id="modalDate" class="detail-value"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Coming Soon Sections -->
+      <!-- Tournaments Section -->
       <div id="tournaments-section" class="content-section">
         <h1 class="animate-pop">TOURNAMENTS</h1>
         <div class="description animate-slide">
@@ -130,17 +65,16 @@
           >
         </div>
 
-        <!-- Stats Bar - Moved below search box -->
         <div class="stats-bar">
           <span>Total Tournaments: <span id="totalTournaments">0</span></span>
           <span>Upcoming: <span id="upcomingCount">0</span></span>
           <span>Completed: <span id="completedCount">0</span></span>
         </div>
 
-        <!-- Tournaments Grid -->
         <div class="tournaments-grid"></div>
       </div>
       
+      <!-- Rules Section -->
       <div id="rules-section" class="content-section">
         <h1 class="animate-pop">RULES</h1>
         <div class="rules-container">
@@ -167,7 +101,6 @@
               <h1>Steel Flower Critical Ops Global Tournament Regulations</h1>
               <div class="version-info">
                 <span>Version 1</span>
-                
               </div>
             </div>
         
@@ -279,7 +212,6 @@
                 <li>Any player with a banned account is permanently ineligible to participate.</li>
               </ul>
             </section>
-
 
             <section class="doc-section" id="roster-rules">
               <h2>Section 3. Roster</h2>
@@ -417,6 +349,7 @@
                 <li>5.8.2. If no agreement is reached, a coin flip must be performed in the main Discord server's private captain channel.</li>
               </ul>
             </section>
+
             <section class="doc-section" id="room-settings">
               <h2>Room Settings</h2>
               <div class="rules-table-container animate-pop">
@@ -653,6 +586,7 @@
                 </li>
               </ul>
             </section>
+
             <section class="doc-section" id="sanctions">
               <h2>Section 10. Sanctions</h2>
               
@@ -670,7 +604,7 @@
           </div>
         </div>
       </div>
-    </div> <!-- End of .container -->
+    </div>
 
     <footer class="site-footer">
       <div class="footer-content">
@@ -694,402 +628,197 @@
     <script>
         let currentSection = 'home';
         const animationDuration = 300;
-        let originalData = [];
-        let searchTimeout;
-        let sortDirection = 'asc';
-        let sortColumn = 0;
 
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        });
-    });
-
-    // Rules section navigation
-    document.querySelectorAll('.rules-nav .nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const sectionId = this.dataset.section;
-            document.querySelectorAll('.rules-nav .nav-item').forEach(nav => 
-                nav.classList.remove('active'));
-            this.classList.add('active');
-            
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-
-    async function loadTournaments() {
-    showLoading();
-    try {
-        const response = await fetch('/api/tournaments');
-        const data = await response.json();
-        const container = document.querySelector('.tournaments-grid');
-        container.innerHTML = '';
-        
-        let upcoming = 0;
-        let completed = 0;
-        
-        data.data.forEach(tournament => {
-            const card = document.createElement('div');
-            card.className = 'tournament-card animate-slide';
-            card.dataset.id = tournament.id; 
-            const progress = (tournament.registered_teams / tournament.max_teams) * 100;
-            
-            // Handle missing start date
-            const startDate = tournament.start_date ? 
-                new Date(tournament.start_date).toLocaleDateString() : 'N/A';
-            
-            // Modified status calculation
-            const status = tournament.start_date ? 
-                (new Date(tournament.start_date) > new Date() ? 'Upcoming' : 'Completed') : 'N/A';
-
-            if(status === 'Upcoming') upcoming++;
-            if(status === 'Completed') completed++;
-            
-            card.innerHTML = `
-                <div class="tournament-header">
-                <div class="tournament-status ${status.toLowerCase() === 'upcoming' ? 'status-upcoming' : 'status-completed'}">
-                    ${status}
-                </div>
-                <h3 class="tournament-title">${tournament.name}</h3>
-                <div class="tournament-meta">
-                    <span class="tournament-region">${tournament.region}</span>
-                    <span class="tournament-format">${tournament.format}</span>
-                </div>
-            </div>
-            <div class="tournament-detail">
-                <span class="detail-label">Starts:</span>
-                <span class="detail-value">${startDate}</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${progress}%"></div>
-            </div>
-            <div class="tournament-detail">
-                <span class="detail-label">Teams:</span>
-                <span class="detail-value">${tournament.registered_teams}/${tournament.max_teams}</span>
-            </div>
-        `;
-            
-            container.appendChild(card);
-        });
-        
-        document.getElementById('totalTournaments').textContent = data.data.length;
-        document.getElementById('upcomingCount').textContent = upcoming;
-        document.getElementById('completedCount').textContent = completed;
-    } catch(error) {
-        console.error('Error loading tournaments:', error);
-    }
-    hideLoading();
-}
-    function showSection(sectionId) {
-        showLoading();
-        
-        // Hide all sections
-        document.querySelectorAll('.content-section').forEach(section => {
-            section.classList.remove('active');
-            section.style.display = 'none';
-        });
-
-        // Update nav buttons
-        document.querySelectorAll('.nav-button').forEach(button => {
-            button.classList.remove('active');
-            if(button.querySelector('span').textContent.toLowerCase() === sectionId) {
-                button.classList.add('active');
-            }
-        });
-
-        // Show selected section
-        const activeSection = document.getElementById(`${sectionId}-section`);
-        if(activeSection) {
-            activeSection.style.display = 'block';
-            setTimeout(() => {
-                activeSection.classList.add('active');
-            }, 50);
-        }
-
-        // Load dynamic content if needed
-        if (sectionId === 'tournaments') {
-            updateURL('/tournaments');
-            loadTournaments();
-        }
-
-        if (sectionId === 'blacklist' && originalData.length === 0) {
-            updateURL('/blacklist');
-            fetchBlacklistData();
-        }
-        
-        // Scroll to top
-        window.scrollTo(0, 0);
-        
-        hideLoading();
-    }
-
-    async function fetchBlacklistData() {
-                showLoading();
-                try {
-                    const response = await fetch('/api/blacklist');
-                    const data = await response.json();
-                    originalData = data.data;
-                    updateTable(originalData);
-                    updateStats();
-                    setupTableSorting();
-                } catch(error) {
-                    console.error('Error fetching data:', error);
-                }
-                hideLoading();
-            }
-        
-            document.getElementById('searchInput').addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    const filter = this.value.toLowerCase();
-                    const filteredData = originalData.filter(entry => 
-                        Object.values(entry).some(value => 
-                            String(value).toLowerCase().includes(filter)
-                        )
-                    );
-                    updateTable(filteredData);
-                    updateStats(filteredData);
-                }, 300);
-            });
-
-            document.getElementById('tournamentSearch').addEventListener('input', function() {
-                const filter = this.value.toLowerCase();
-                const cards = document.querySelectorAll('.tournament-card');
-        
-                cards.forEach(card => {
-                    const text = card.textContent.toLowerCase();
-                    card.style.display = text.includes(filter) ? 'block' : 'none';
-                });
-            });
-        
-            function createStatusFilter() {
-    // Check if filter already exists
-            if(document.querySelector('.status-filter')) return;
-    
-            const filterHTML = `
-                <div class="status-filter">
-                    <button class="filter-btn active" onclick="filterTable('all')">All</button>
-                    <button class="filter-btn" onclick="filterTable('active')">Active</button>
-                    <button class="filter-btn" onclick="filterTable('inactive')">Inactive</button>
-                </div>
-            `;
-            document.querySelector('#blacklist-section').insertAdjacentHTML('afterbegin', filterHTML);
-        }
-        
-            function filterTable(status) {
-                const filtered = originalData.filter(entry => 
-                    status === 'all' ? true : entry.status.toLowerCase() === status
-                );
-                updateTable(filtered);
-                document.querySelectorAll('.filter-btn').forEach(btn => 
-                    btn.classList.toggle('active', btn.textContent.toLowerCase() === status)
-                );
-            }
-        
-            function setupTableSorting() {
-                document.querySelectorAll('#blacklistTable th').forEach((header, index) => {
-                    header.style.cursor = 'pointer';
-                    header.addEventListener('click', () => {
-                        sortDirection = sortColumn === index ? 
-                            (sortDirection === 'asc' ? 'desc' : 'asc') : 'asc';
-                        sortColumn = index;
-                        sortTable(index, sortDirection);
-                        document.querySelectorAll('#blacklistTable th').forEach(h => 
-                            h.removeAttribute('data-sort')
-                        );
-                        header.setAttribute('data-sort', sortDirection);
-                    });
-                });
-            }
-        
-            function sortTable(columnIndex, direction = 'asc') {
-                const tbody = document.querySelector('#blacklistTable tbody');
-                const rows = Array.from(tbody.querySelectorAll('tr'));
+        // Rules section navigation
+        document.querySelectorAll('.rules-nav .nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const sectionId = this.dataset.section;
+                document.querySelectorAll('.rules-nav .nav-item').forEach(nav => 
+                    nav.classList.remove('active'));
+                this.classList.add('active');
                 
-                rows.sort((a, b) => {
-                    const aValue = a.children[columnIndex].textContent;
-                    const bValue = b.children[columnIndex].textContent;
-                    return direction === 'asc' ? 
-                        aValue.localeCompare(bValue, undefined, {numeric: true}) :
-                        bValue.localeCompare(aValue, undefined, {numeric: true});
-                });
-        
-                tbody.innerHTML = '';
-                rows.forEach(row => tbody.appendChild(row));
-            }
-        
-            function updateStats(data = originalData) {
-                const active = data.filter(entry => 
-                    String(entry.status).toLowerCase().trim() === 'active'
-                ).length;
-        
-                const inactive = data.filter(entry => 
-                    String(entry.status).toLowerCase().trim() === 'inactive'
-                ).length;
-        
-                document.getElementById('totalCount').textContent = data.length;
-                document.getElementById('activeCount').textContent = active;
-                document.getElementById('inactiveCount').textContent = inactive;
-            }
-        
-            function animateValue(id, start, end, duration) {
-                const obj = document.getElementById(id);
-                let startTimestamp = null;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    obj.textContent = Math.floor(progress * (end - start) + start);
-                    if (progress < 1) requestAnimationFrame(step);
-                };
-                requestAnimationFrame(step);
-            }
-        
-            document.addEventListener('mousemove', (e) => {
-                document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-                document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
-            });
-        
-            window.addEventListener('scroll', () => {
-                const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-                document.documentElement.style.setProperty('--scroll-progress', progress);
-                document.querySelector('.scroll-progress').style.width = `${progress}%`;
-            });
-        
-            function setupKeyboardShortcuts() {
-                document.addEventListener('keydown', (e) => {
-                    if(e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
-                        e.preventDefault();
-                        document.getElementById('searchInput').focus();
-                    }
-                    if(e.ctrlKey) {
-                        if(e.key === '1') showSection('home');
-                        if(e.key === '2') showSection('blacklist');
-                        if(e.key === '3') showSection('tournaments');
-                        if(e.key === '4') showSection('rules');
-                    }
-                    if(e.key === 'Escape') {
-                        document.getElementById('playerModal').style.display = 'none';
-                    }
-                });
-            }
-        
-            function updateURL(path) {
-                const state = { page: path.replace('/', '') };
-                history.pushState(state, '', path);
-            }
-        
-            function updateTable(data) {
-                const tbody = document.querySelector('#blacklistTable tbody');
-                tbody.innerHTML = '';
-        
-                if (data.length === 0) {
-                    tbody.innerHTML = `<tr class="no-results"><td colspan="5">No matching records found</td></tr>`;
-                    return;
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-        
-                data.forEach(entry => {
-                    const row = document.createElement('tr');
-                    const formattedStatus = entry.status.charAt(0).toUpperCase() + entry.status.slice(1).toLowerCase();
-                    const formattedDate = new Date(entry.date_added).toLocaleDateString('en-GB', dateOptions);
-        
-                    row.innerHTML = `
-                        <td>${entry.ign}</td>
-                        <td>${entry.game_id}</td>
-                        <td>${entry.reason}</td>
-                        <td class="status-${formattedStatus.toLowerCase()}">${formattedStatus}</td>
-                        <td>${formattedDate}</td>
+            });
+        });
+
+        async function loadTournaments() {
+            showLoading();
+            try {
+                const response = await fetch('/api/tournaments');
+                const data = await response.json();
+                const container = document.querySelector('.tournaments-grid');
+                container.innerHTML = '';
+                
+                let upcoming = 0;
+                let completed = 0;
+                
+                data.data.forEach(tournament => {
+                    const card = document.createElement('div');
+                    card.className = 'tournament-card animate-slide';
+                    card.dataset.id = tournament.id; 
+                    const progress = (tournament.registered_teams / tournament.max_teams) * 100;
+                    
+                    // Handle missing start date
+                    const startDate = tournament.start_date ? 
+                        new Date(tournament.start_date).toLocaleDateString() : 'N/A';
+                    
+                    // Modified status calculation
+                    const status = tournament.start_date ? 
+                        (new Date(tournament.start_date) > new Date() ? 'Upcoming' : 'Completed') : 'N/A';
+
+                    if(status === 'Upcoming') upcoming++;
+                    if(status === 'Completed') completed++;
+                    
+                    card.innerHTML = `
+                        <div class="tournament-header">
+                            <div class="tournament-status ${status.toLowerCase() === 'upcoming' ? 'status-upcoming' : 'status-completed'}">
+                                ${status}
+                            </div>
+                            <h3 class="tournament-title">${tournament.name}</h3>
+                            <div class="tournament-meta">
+                                <span class="tournament-region">${tournament.region}</span>
+                                <span class="tournament-format">${tournament.format}</span>
+                            </div>
+                        </div>
+                        <div class="tournament-detail">
+                            <span class="detail-label">Starts:</span>
+                            <span class="detail-value">${startDate}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="tournament-detail">
+                            <span class="detail-label">Teams:</span>
+                            <span class="detail-value">${tournament.registered_teams}/${tournament.max_teams}</span>
+                        </div>
                     `;
-                    row.addEventListener('click', () => showPlayerDetails(entry));
-                    tbody.appendChild(row);
+                    
+                    container.appendChild(card);
                 });
+                
+                document.getElementById('totalTournaments').textContent = data.data.length;
+                document.getElementById('upcomingCount').textContent = upcoming;
+                document.getElementById('completedCount').textContent = completed;
+            } catch(error) {
+                console.error('Error loading tournaments:', error);
             }
-        
-            function showPlayerDetails(player) {
-                const modal = document.getElementById('playerModal');
-                modal.style.display = 'block';
-                modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                document.getElementById('modalIGN').textContent = player.ign;
-                document.getElementById('discordID').textContent = player.discord_id;
-                document.getElementById('modalGameID').textContent = player.game_id;
-                document.getElementById('modalStatus').textContent = player.status;
-                document.getElementById('modalDate').textContent = 
-                    new Date(player.date_added).toLocaleDateString('en-GB', dateOptions);
-            }
-        
-            function showLoading() {
-                document.getElementById('loadingSpinner').style.display = 'flex';
-            }
-        
-            function hideLoading() {
-                document.getElementById('loadingSpinner').style.display = 'none';
-            }
-        
-            document.addEventListener('DOMContentLoaded', () => {
-                fetchBlacklistData();
-                setupKeyboardShortcuts();
-                document.body.insertAdjacentHTML('afterbegin', '<div class="scroll-progress"></div>');
+            hideLoading();
+        }
 
-        // Initialize rules section observer
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if(entry.isIntersecting) {
-                            entry.target.style.opacity = "1";
-                            entry.target.style.transform = "translateY(0)";
-                        }
-                    });
-                }, {
-                    threshold: 0.1,
-                    rootMargin: "0px 0px -100px 0px"
-                });
-
-                document.querySelectorAll('.doc-section').forEach(section => {
-                    observer.observe(section);
-                });
-            });
-        
-            window.addEventListener('popstate', (event) => {
-                if (event.state && event.state.page) {
-                    showSection(event.state.page);
-                } else {
-                    showSection('home');
-                }
-            });
-        
-            document.querySelector('.close').addEventListener('click', () => {
-                document.getElementById('playerModal').style.display = 'none';
+        function showSection(sectionId) {
+            showLoading();
+            
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
             });
 
-            document.querySelector('.tournaments-grid').addEventListener('click', (e) => {
-                const card = e.target.closest('.tournament-card');
-                if (card) {
-                    const tournamentName = card.querySelector('.tournament-title').textContent;
-                    window.location.href = `/tournaments/${encodeURIComponent(tournamentName)}`;
+            // Update nav buttons
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+                if(button.querySelector('span').textContent.toLowerCase() === sectionId) {
+                    button.classList.add('active');
                 }
             });
-        
-            window.addEventListener('click', (event) => {
-                const modal = document.getElementById('playerModal');
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-        
-            function clearSearch() {
-                document.getElementById('searchInput').value = '';
-                updateTable(originalData);
-                updateStats();
+
+            // Show selected section
+            const activeSection = document.getElementById(`${sectionId}-section`);
+            if(activeSection) {
+                activeSection.style.display = 'block';
+                setTimeout(() => {
+                    activeSection.classList.add('active');
+                }, 50);
             }
-        
-            const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-            showSection('home');
+
+            // Load dynamic content if needed
+            if (sectionId === 'tournaments') {
+                updateURL('/tournaments');
+                loadTournaments();
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            hideLoading();
+        }
+
+        document.getElementById('tournamentSearch').addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.tournament-card');
+    
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(filter) ? 'block' : 'none';
+            });
+        });
+
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupKeyboardShortcuts();
+            document.body.insertAdjacentHTML('afterbegin', '<div class="scroll-progress"></div>');
+
+            // Initialize rules section observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: "0px 0px -100px 0px"
+            });
+
+            document.querySelectorAll('.doc-section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                if(e.ctrlKey) {
+                    if(e.key === '1') showSection('home');
+                    if(e.key === '2') showSection('blacklist');
+                    if(e.key === '3') showSection('tournaments');
+                    if(e.key === '4') showSection('rules');
+                }
+            });
+        }
+
+        function updateURL(path) {
+            const state = { page: path.replace('/', '') };
+            history.pushState(state, '', path);
+        }
+
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.page) {
+                showSection(event.state.page);
+            } else {
+                showSection('home');
+            }
+        });
+
+        document.querySelector('.tournaments-grid').addEventListener('click', (e) => {
+            const card = e.target.closest('.tournament-card');
+            if (card) {
+                const tournamentName = card.querySelector('.tournament-title').textContent;
+                window.location.href = `/tournaments/${encodeURIComponent(tournamentName)}`;
+            }
+        });
+
+        showSection('home');
     </script>
   </body>
 </html>

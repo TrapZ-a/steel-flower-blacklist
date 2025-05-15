@@ -9,9 +9,11 @@ app = Flask(__name__)
 # Configuration
 DATA_DIR = 'data'
 BLACKLIST_FILE = os.path.join(DATA_DIR, 'blacklist.xlsx')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, 'tournaments1.db')
 
 def get_db_connection():
-    conn = sqlite3.connect('tournaments1.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row  # This enables column access by name
     return conn
 
@@ -86,6 +88,10 @@ def process_blacklist():
 def index():
     return render_template('index.html')
 
+@app.route('/blacklist')
+def blacklist():
+    return render_template('blacklist.html')
+
 @app.route('/tournaments/<tournament_name>')
 def tournament_details(tournament_name):
     try:
@@ -104,7 +110,7 @@ def tournament_details(tournament_name):
                     ELSE 'active'
                 END as status
             FROM tournaments t
-            LEFT JOIN teams team ON t.tournament_id = team.tournament_id
+            LEFT JOIN teams team ON t.challonge_id = team.tournament_id
             WHERE t.name = ?
             GROUP BY t.tournament_id
         ''', (tournament_name,))
@@ -129,7 +135,7 @@ def tournament_details(tournament_name):
             LEFT JOIN players p ON json_extract(player_list.value, '$.id') = p.player_id
             WHERE team.tournament_id = ?
             GROUP BY team.team_id
-        ''', (tournament['tournament_id'],))
+        ''', (tournament['challonge_id'],))
         
         teams = []
         for row in cursor.fetchall():
@@ -210,7 +216,7 @@ def get_tournaments():
                     ELSE 'active'
                 END AS status
             FROM tournaments t
-            LEFT JOIN teams team ON t.tournament_id = team.tournament_id
+            LEFT JOIN teams team ON t.challonge_id = team.tournament_id
             GROUP BY t.tournament_id
             ORDER BY t.start_date DESC
         ''')
@@ -234,6 +240,7 @@ def get_tournament_details(tournament_id):
         cursor.execute('''
             SELECT 
                 t.tournament_id,
+                t.challonge_id,
                 t.name,
                 t.max_teams,
                 t.region,
@@ -244,7 +251,7 @@ def get_tournament_details(tournament_id):
                 t.tournament_brackets,
                 COUNT(DISTINCT team.team_id) AS registered_teams
             FROM tournaments t
-            LEFT JOIN teams team ON t.tournament_id = team.tournament_id
+            LEFT JOIN teams team ON t.challonge_id = team.tournament_id
             WHERE t.tournament_id = ?
             GROUP BY t.tournament_id
         ''', (tournament_id,))
@@ -264,7 +271,7 @@ def get_tournament_details(tournament_id):
                 team.checked_in
             FROM teams team
             WHERE team.tournament_id = ?
-        ''', (tournament_id,))
+        ''', (tournament['challonge_id'],))
         teams = [dict(row) for row in cursor.fetchall()]
 
         # Fetch matches in the tournament
@@ -345,8 +352,8 @@ def get_blacklist():
     data = process_blacklist()
     return jsonify({'data': data})
 
-@app.route('/rules')
-def rules():
+@app.route('/tournaments')
+def tournaments():
     return render_template('index.html')
 
 @app.errorhandler(404)

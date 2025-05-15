@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Blacklist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    <div class="container">
+      <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+
+      <nav class="main-nav">
+        <div class="nav-gradient"></div>
+        <div class="nav-inner">
+          <button class="nav-button" onclick="window.location.href='/'">
+            <span>Home</span>
+            <div class="nav-line"></div>
+          </button>
+          <button class="nav-button active" onclick="window.location.href='/blacklist'">
+            <span>Blacklist</span>
+            <div class="nav-line"></div>
+          </button>
+          <button class="nav-button" onclick="window.location.href='/tournaments'">
+            <span>Tournaments</span>
+            <div class="nav-line"></div>
+          </button>
+          <button class="nav-button" onclick="window.location.href='/rules'">
+            <span>Rules</span>
+            <div class="nav-line"></div>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Blacklist Section -->
+      <div id="blacklist-section" class="content-section active">
+        <h1 class="animate-pop">STEEL FLOWER BLACKLIST</h1>
+        <div class="description animate-slide">
+          <p>The Steel Flower Blacklist maintains competitive integrity in our tournaments by tracking players who violated rules through cheating, unsportsmanlike conduct, or other prohibited activities. This list ensures fair play for all participants.</p>
+        </div>
+        <div class="search-box">
+          <label for="searchInput" class="sr-only">Search</label>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by IGN, Game ID, or Reason..."
+            onfocus="this.placeholder=''"
+            onblur="this.placeholder='Search by IGN, Game ID, or Reason...'"
+          >
+          <div class="search-tools">
+            <button class="search-clear" aria-label="Clear search" onclick="clearSearch()">&times;</button>
+          </div>
+        </div>
+        <div class="stats-bar">
+          <span>Total Entries: <span id="totalCount">0</span></span>
+          <span>Active: <span id="activeCount">0</span></span>
+          <span>Inactive: <span id="inactiveCount">0</span></span>
+        </div>
+        <table id="blacklistTable">
+          <thead>
+            <tr>
+              <th scope="col">IGN</th>
+              <th scope="col">GAME ID</th>
+              <th scope="col">REASON</th>
+              <th scope="col">STATUS</th>
+              <th scope="col">DATE ADDED</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <div id="playerModal" class="modal" role="dialog" aria-labelledby="modalIGN" aria-hidden="true">
+          <div class="modal-content">
+            <button class="close" aria-label="Close modal">&times;</button>
+            <div class="profile-header">
+              <h2 id="modalIGN" class="animate-pop"></h2>
+            </div>
+            <div class="profile-details">
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-id-badge" aria-hidden="true"></i> Discord ID</span>
+                <span id="discordID" class="detail-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-gamepad" aria-hidden="true"></i> Game ID</span>
+                <span id="modalGameID" class="detail-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-power-off" aria-hidden="true"></i> Status</span>
+                <span id="modalStatus" class="detail-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Date Added</span>
+                <span id="modalDate" class="detail-value"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="social-icons">
+          <a href="https://discord.gg/encdzGBrND" target="_blank" class="social-icon">
+            <i class="fab fa-discord"></i>
+          </a>
+          <a href="https://www.twitter.com/SteelFlowerGG" target="_blank" class="social-icon">
+            <i class="fab fa-x-twitter"></i>
+          </a>
+          <a href="https://www.youtube.com/@SteelFlower" target="_blank" class="social-icon">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+        <div class="copyright">
+          © 2025 Steel Flower Organisation. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        let originalData = [];
+        let searchTimeout;
+        let sortDirection = 'asc';
+        let sortColumn = 0;
+        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchBlacklistData();
+            setupKeyboardShortcuts();
+            document.body.insertAdjacentHTML('afterbegin', '<div class="scroll-progress"></div>');
+
+            // Set up modal close button event listener
+            document.querySelector('.close').addEventListener('click', () => {
+                document.getElementById('playerModal').style.display = 'none';
+            });
+
+            // Setup click outside modal to close
+            window.addEventListener('click', (event) => {
+                const modal = document.getElementById('playerModal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Setup search input event listener
+            document.getElementById('searchInput').addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const filter = this.value.toLowerCase();
+                    const filteredData = originalData.filter(entry => 
+                        Object.values(entry).some(value => 
+                            String(value).toLowerCase().includes(filter)
+                        )
+                    );
+                    updateTable(filteredData);
+                    updateStats(filteredData);
+                }, 300);
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                });
+            });
+
+            // Monitor scroll for progress bar
+            window.addEventListener('scroll', () => {
+                const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                document.querySelector('.scroll-progress').style.width = `${progress}%`;
+            });
+
+            // Setup mouse effects
+            document.addEventListener('mousemove', (e) => {
+                document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+                document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+            });
+        });
+
+        async function fetchBlacklistData() {
+            showLoading();
+            try {
+                const response = await fetch('/api/blacklist');
+                const data = await response.json();
+                originalData = data.data;
+                updateTable(originalData);
+                updateStats();
+                setupTableSorting();
+            } catch(error) {
+                console.error('Error fetching data:', error);
+            }
+            hideLoading();
+        }
+
+        function setupTableSorting() {
+            document.querySelectorAll('#blacklistTable th').forEach((header, index) => {
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', () => {
+                    sortDirection = sortColumn === index ? 
+                        (sortDirection === 'asc' ? 'desc' : 'asc') : 'asc';
+                    sortColumn = index;
+                    sortTable(index, sortDirection);
+                    document.querySelectorAll('#blacklistTable th').forEach(h => 
+                        h.removeAttribute('data-sort')
+                    );
+                    header.setAttribute('data-sort', sortDirection);
+                });
+            });
+        }
+
+        function sortTable(columnIndex, direction = 'asc') {
+            const tbody = document.querySelector('#blacklistTable tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((a, b) => {
+                const aValue = a.children[columnIndex].textContent;
+                const bValue = b.children[columnIndex].textContent;
+                return direction === 'asc' ? 
+                    aValue.localeCompare(bValue, undefined, {numeric: true}) :
+                    bValue.localeCompare(aValue, undefined, {numeric: true});
+            });
+    
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function updateStats(data = originalData) {
+            const active = data.filter(entry => 
+                String(entry.status).toLowerCase().trim() === 'active'
+            ).length;
+    
+            const inactive = data.filter(entry => 
+                String(entry.status).toLowerCase().trim() === 'inactive'
+            ).length;
+    
+            document.getElementById('totalCount').textContent = data.length;
+            document.getElementById('activeCount').textContent = active;
+            document.getElementById('inactiveCount').textContent = inactive;
+        }
+
+        function updateTable(data) {
+            const tbody = document.querySelector('#blacklistTable tbody');
+            tbody.innerHTML = '';
+    
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr class="no-results"><td colspan="5">No matching records found</td></tr>`;
+                return;
+            }
+    
+            data.forEach(entry => {
+                const row = document.createElement('tr');
+                const formattedStatus = entry.status.charAt(0).toUpperCase() + entry.status.slice(1).toLowerCase();
+                const formattedDate = new Date(entry.date_added).toLocaleDateString('en-GB', dateOptions);
+    
+                row.innerHTML = `
+                    <td>${entry.ign}</td>
+                    <td>${entry.game_id}</td>
+                    <td>${entry.reason}</td>
+                    <td class="status-${formattedStatus.toLowerCase()}">${formattedStatus}</td>
+                    <td>${formattedDate}</td>
+                `;
+                row.addEventListener('click', () => showPlayerDetails(entry));
+                tbody.appendChild(row);
+            });
+        }
+
+        function showPlayerDetails(player) {
+            const modal = document.getElementById('playerModal');
+            modal.style.display = 'block';
+            modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('modalIGN').textContent = player.ign;
+            document.getElementById('discordID').textContent = player.discord_id;
+            document.getElementById('modalGameID').textContent = player.game_id;
+            document.getElementById('modalStatus').textContent = player.status;
+            document.getElementById('modalDate').textContent = 
+                new Date(player.date_added).toLocaleDateString('en-GB', dateOptions);
+        }
+
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                if(e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+                if(e.key === 'Escape') {
+                    document.getElementById('playerModal').style.display = 'none';
+                }
+            });
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            updateTable(originalData);
+            updateStats();
+        }
+
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        function createStatusFilter() {
+            // Check if filter already exists
+            if(document.querySelector('.status-filter')) return;
+    
+            const filterHTML = `
+                <div class="status-filter">
+                    <button class="filter-btn active" onclick="filterTable('all')">All</button>
+                    <button class="filter-btn" onclick="filterTable('active')">Active</button>
+                    <button class="filter-btn" onclick="filterTable('inactive')">Inactive</button>
+                </div>
+            `;
+            document.querySelector('#blacklist-section').insertAdjacentHTML('afterbegin', filterHTML);
+        }
+        
+        function filterTable(status) {
+            const filtered = originalData.filter(entry => 
+                status === 'all' ? true : entry.status.toLowerCase() === status
+            );
+            updateTable(filtered);
+            document.querySelectorAll('.filter-btn').forEach(btn => 
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === status)
+            );
+        }
+    </script>
+  </body>
+</html>
