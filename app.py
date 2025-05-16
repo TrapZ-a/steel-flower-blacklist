@@ -202,6 +202,7 @@ def get_tournaments():
         cursor.execute('''
             SELECT 
                 t.tournament_id,
+                t.challonge_id,
                 t.name,
                 t.max_teams,
                 t.region,
@@ -221,9 +222,31 @@ def get_tournaments():
             ORDER BY t.start_date DESC
         ''')
 
-        tournaments = [dict(row) for row in cursor.fetchall()]
-        conn.close()
+        tournaments = []
+        for tournament in cursor.fetchall():
+            tdict = dict(tournament)
+            # Fetch teams for this tournament
+            cursor2 = conn.cursor()
+            cursor2.execute('''
+                SELECT team_id, name, tag, region, logo_url, players
+                FROM teams
+                WHERE tournament_id = ?
+            ''', (tdict['challonge_id'],))
+            teams = []
+            for team in cursor2.fetchall():
+                team_dict = dict(team)
+                # Parse players JSON
+                try:
+                    import json
+                    team_dict['roster'] = json.loads(team_dict['players']) if team_dict['players'] else []
+                except Exception:
+                    team_dict['roster'] = []
+                del team_dict['players']
+                teams.append(team_dict)
+            tdict['teams'] = teams
+            tournaments.append(tdict)
 
+        conn.close()
         return jsonify({'success': True, 'data': tournaments})
 
     except Exception as e:
