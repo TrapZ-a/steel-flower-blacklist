@@ -295,6 +295,17 @@
             border-color: var(--gold);
         }
 
+        .btn-admin {
+            background: rgba(255, 0, 0, 0.8);
+            color: var(--text);
+            border: 1px solid transparent;
+        }
+
+        .btn-admin:hover {
+            background: rgba(255, 0, 0, 1);
+            transform: translateY(-2px);
+        }
+
         .btn-disabled {
             background: var(--neutral-700);
             color: var(--neutral-400);
@@ -897,6 +908,691 @@
             text-decoration: underline;
         }
 
+        /* Admin panel styles */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s var(--cubic);
+        }
+
+        .admin-panel.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .admin-content {
+            background-color: var(--primary-light);
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .admin-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s var(--cubic);
+        }
+
+        .admin-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .admin-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .admin-tab {
+            padding: 1rem 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s var(--cubic);
+        }
+
+        .admin-tab.active {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .admin-tab:hover:not(.active) {
+            color: var(--text);
+            border-bottom: 2px solid var(--text-muted);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+            animation: fadeIn 0.5s var(--cubic);
+        }
+
+        .admin-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+        }
+
+        .admin-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-input, .admin-select, .admin-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.375rem;
+            color: var(--text);
+            transition: all 0.3s var(--cubic);
+        }
+
+        .admin-input:focus, .admin-select:focus, .admin-textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+
+        .admin-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+        }
+
+        .admin-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .admin-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--cubic);
+            border: none;
+        }
+
+        .admin-button.primary {
+            background-color: var(--gold);
+            color: var(--primary);
+        }
+
+        .admin-button.primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .admin-button.secondary {
+            background-color: transparent;
+            color: var(--text);
+            border: 1px solid var(--text-muted);
+        }
+
+        .admin-button.secondary:hover {
+            border-color: var(--text);
+            transform: translateY(-2px);
+        }
+
+        .admin-button.danger {
+            background-color: var(--error);
+            color: white;
+        }
+
+        .admin-button.danger:hover {
+            background-color: #ff3939;
+            transform: translateY(-2px);
+        }
+
+        .admin-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .admin-table th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text);
+        }
+
+        .admin-table tr:hover td {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .admin-table-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .admin-icon-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s var(--cubic);
+            border: none;
+        }
+
+        .admin-icon-button:hover {
+            color: var(--text);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-icon-button.edit:hover {
+            color: var(--gold);
+        }
+
+        .admin-icon-button.delete:hover {
+            color: var(--error);
+        }
+
+        /* Login modal */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s var(--cubic);
+        }
+
+        .login-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .login-content {
+            background-color: var(--primary-light);
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+        }
+
+        .login-error {
+            color: var(--error);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Bracket visualization */
+        .bracket-container {
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+            padding: 2rem 0;
+        }
+
+        .bracket-round {
+            display: flex;
+            flex-direction: column;
+            margin-right: 2rem;
+        }
+
+        .bracket-round:last-child {
+            margin-right: 0;
+        }
+
+        .bracket-title {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .bracket-matches {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bracket-match {
+            background-color: var(--primary-light);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            width: 200px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .bracket-team {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bracket-team:last-child {
+            border-bottom: none;
+        }
+
+        .bracket-team-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .bracket-team-score {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .bracket-line {
+            flex: 1;
+            position: relative;
+        }
+
+        .bracket-line::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: rgba(255, 215, 0, 0.3);
+        }
+
+        /* Team management */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .team-item {
+            background-color: var(--primary-light);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            transition: all 0.3s var(--cubic);
+        }
+
+        .team-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--gold);
+        }
+
+        .team-item-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .team-item-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1.5rem;
+            border: 2px solid var(--gold);
+            overflow: hidden;
+        }
+
+        .team-item-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-item-info {
+            flex: 1;
+        }
+
+        .team-item-name {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+        }
+
+        .team-item-tag {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .team-item-players {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .team-item-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        /* New bracket design with connecting lines */
+        .bracket-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            overflow-x: auto;
+            min-width: 100%;
+        }
+
+        .bracket-rounds {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .bracket-round {
+            display: flex;
+            flex-direction: column;
+            margin: 0 20px;
+        }
+
+        .bracket-match-wrapper {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .bracket-match {
+            background-color: var(--primary-light);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            width: 220px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s var(--cubic);
+        }
+
+        .bracket-match:hover {
+            transform: translateY(-3px);
+            border-color: var(--gold);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .bracket-match-header {
+            padding: 8px 12px;
+            background-color: rgba(255, 215, 0, 0.1);
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bracket-team {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bracket-team:last-child {
+            border-bottom: none;
+        }
+
+        .bracket-team.winner {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .bracket-team-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bracket-team-seed {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            border-radius: 50%;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .bracket-team-name {
+            font-weight: 600;
+            color: var(--text);
+            max-width: 130px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bracket-team-score {
+            font-weight: 700;
+            color: var(--text);
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .bracket-team.winner .bracket-team-score {
+            color: var(--gold);
+        }
+
+        .connector {
+            position: absolute;
+            z-index: -1;
+        }
+
+        .connector-horizontal {
+            height: 2px;
+            background-color: rgba(255, 215, 0, 0.3);
+            position: absolute;
+            right: -20px;
+        }
+
+        .connector-vertical {
+            width: 2px;
+            background-color: rgba(255, 215, 0, 0.3);
+            position: absolute;
+            right: -20px;
+        }
+
+        /* Group stage design */
+        .group-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .group-card {
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .group-header {
+            padding: 12px 16px;
+            background-color: rgba(255, 215, 0, 0.1);
+            font-weight: 700;
+            color: var(--gold);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .group-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .group-table th {
+            text-align: left;
+            padding: 10px 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .group-table td {
+            padding: 8px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .group-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .group-table tr:hover td {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .group-position {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .group-position-1, .group-position-2 {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success);
+        }
+
+        .group-position-3, .group-position-4 {
+            background-color: rgba(255, 152, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .group-team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .group-team-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 10px;
+            overflow: hidden;
+            border: 1px solid var(--gold);
+        }
+
+        .group-team-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Admin login button */
+        .admin-login-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s var(--cubic);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-login-button:hover {
+            transform: scale(1.1);
+            color: var(--text);
+            border-color: var(--gold);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .tournament-title {
@@ -939,6 +1635,10 @@
             .prize-card {
                 max-width: 100%;
             }
+
+            .admin-tabs {
+                flex-wrap: wrap;
+            }
         }
 
         @media (max-width: 480px) {
@@ -953,6 +1653,11 @@
 
             .tab {
                 padding: 1rem 0.75rem;
+                font-size: 0.875rem;
+            }
+
+            .admin-tab {
+                padding: 0.75rem 1rem;
                 font-size: 0.875rem;
             }
         }
@@ -1457,23 +2162,11 @@
                 <div class="tab-content" id="brackets-content">
                     <h2 class="section-title">Tournament Brackets</h2>
                     
-                    {% if tournament.brackets %}
-                        <div class="brackets-container animate-fade-up">
-                            <div class="tournament-bracket" id="bracket-display">
-                                <!-- Tournament brackets will be rendered here by JavaScript -->
-                            </div>
+                    <div class="brackets-container animate-fade-up">
+                        <div class="tournament-bracket" id="bracket-display">
+                            <!-- Tournament brackets will be rendered here by JavaScript -->
                         </div>
-                    {% else %}
-                        <div class="empty-state">
-                            <div class="empty-icon">
-                                <i class="fas fa-diagram-project"></i>
-                            </div>
-                            <h3 class="empty-title">Brackets Not Available Yet</h3>
-                            <p class="empty-message">
-                                Tournament brackets will be published once registration closes and the tournament begins.
-                            </p>
-                        </div>
-                    {% endif %}
+                    </div>
                 </div>
                 
                 <!-- Rules Tab Content -->
@@ -1548,6 +2241,210 @@
         </div>
     </div>
     
+    <!-- Admin Login Button -->
+    <div class="admin-login-button" id="adminLoginButton">
+        <i class="fas fa-lock"></i>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-content">
+            <h3 class="login-title">Admin Login</h3>
+            <div id="loginError" class="login-error"></div>
+            <form id="loginForm">
+                <div class="admin-form-group">
+                    <label for="passwordInput" class="admin-label">Password</label>
+                    <input type="password" id="passwordInput" class="admin-input" placeholder="Enter admin password" required>
+                </div>
+                <div class="admin-actions">
+                    <button type="button" class="admin-button secondary" id="cancelLoginButton">Cancel</button>
+                    <button type="submit" class="admin-button primary" id="submitLoginButton">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <div class="admin-close" id="closeAdminPanel">
+                <i class="fas fa-times"></i>
+            </div>
+            <h2 class="admin-title">Tournament Admin Panel</h2>
+            
+            <div class="admin-tabs">
+                <div class="admin-tab active" data-section="teams">Teams</div>
+                <div class="admin-tab" data-section="brackets">Brackets</div>
+                <div class="admin-tab" data-section="scores">Scores</div>
+            </div>
+            
+            <!-- Teams Section -->
+            <div class="admin-section active" id="teams-section">
+                <div class="admin-actions" style="justify-content: space-between; margin-bottom: 1.5rem;">
+                    <h3 class="section-title" style="margin-bottom: 0;">Manage Teams</h3>
+                    <button class="admin-button primary" id="addTeamButton">
+                        <i class="fas fa-plus"></i> Add Team
+                    </button>
+                </div>
+                
+                <div class="team-grid" id="adminTeamGrid">
+                    <!-- Teams will be loaded here -->
+                </div>
+                
+                <div id="teamFormContainer" style="display: none;">
+                    <h3 class="admin-title" id="teamFormTitle">Add New Team</h3>
+                    <form id="teamForm">
+                        <div class="admin-form-group">
+                            <label for="teamName" class="admin-label">Team Name</label>
+                            <input type="text" id="teamName" class="admin-input" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="teamTag" class="admin-label">Team Tag</label>
+                            <input type="text" id="teamTag" class="admin-input" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="teamLogo" class="admin-label">Logo URL (optional)</label>
+                            <input type="text" id="teamLogo" class="admin-input">
+                        </div>
+                        
+                        <h4 style="margin: 1.5rem 0 1rem; color: var(--text-muted);">Players</h4>
+                        <div id="playersList" class="admin-form-group">
+                            <!-- Player inputs will be added here -->
+                        </div>
+                        
+                        <button type="button" class="admin-button secondary" style="margin-bottom: 1.5rem;" id="addPlayerButton">
+                            <i class="fas fa-plus"></i> Add Player
+                        </button>
+                        
+                        <div class="admin-actions">
+                            <button type="button" class="admin-button secondary" id="cancelTeamButton">Cancel</button>
+                            <button type="submit" class="admin-button primary" id="saveTeamButton">Save Team</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Brackets Section -->
+            <div class="admin-section" id="brackets-section">
+                <h3 class="section-title">Bracket Configuration</h3>
+                
+                <div class="admin-form-group">
+                    <label for="bracketType" class="admin-label">Bracket Type</label>
+                    <select id="bracketType" class="admin-select">
+                        <option value="single-elimination">Single Elimination</option>
+                        <option value="double-elimination">Double Elimination</option>
+                        <option value="group-stage">Group Stage</option>
+                        <option value="round-robin">Round Robin</option>
+                    </select>
+                </div>
+                
+                <div class="admin-form-group" id="groupSizeContainer" style="display: none;">
+                    <label for="groupSize" class="admin-label">Number of Groups</label>
+                    <select id="groupSize" class="admin-select">
+                        <option value="2">2 Groups</option>
+                        <option value="4">4 Groups</option>
+                        <option value="8">8 Groups</option>
+                    </select>
+                </div>
+                
+                <div class="admin-form-group" id="teamsPerGroupContainer" style="display: none;">
+                    <label for="teamsPerGroup" class="admin-label">Teams Per Group</label>
+                    <select id="teamsPerGroup" class="admin-select">
+                        <option value="3">3 Teams</option>
+                        <option value="4">4 Teams</option>
+                        <option value="5">5 Teams</option>
+                        <option value="6">6 Teams</option>
+                    </select>
+                </div>
+                
+                <div class="admin-form-group" id="advancingTeamsContainer" style="display: none;">
+                    <label for="advancingTeams" class="admin-label">Teams Advancing from Each Group</label>
+                    <select id="advancingTeams" class="admin-select">
+                        <option value="1">1 Team</option>
+                        <option value="2" selected>2 Teams</option>
+                        <option value="3">3 Teams</option>
+                    </select>
+                </div>
+                
+                <div class="admin-form-group">
+                    <label for="bracketSeeding" class="admin-label">Seeding Method</label>
+                    <select id="bracketSeeding" class="admin-select">
+                        <option value="random">Random</option>
+                        <option value="manual">Manual Seeding</option>
+                    </select>
+                </div>
+                
+                <div id="bracketPreview" class="admin-form-group" style="margin-top: 2rem;">
+                    <h4 style="margin-bottom: 1rem; color: var(--text-muted);">Bracket Preview</h4>
+                    <div style="background-color: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0.5rem; text-align: center;">
+                        <p>Preview will be shown after generating the bracket</p>
+                    </div>
+                </div>
+                
+                <div class="admin-actions">
+                    <button class="admin-button secondary" id="resetBracketButton">Reset</button>
+                    <button class="admin-button primary" id="generateBracketButton">Generate Bracket</button>
+                </div>
+            </div>
+            
+            <!-- Scores Section -->
+            <div class="admin-section" id="scores-section">
+                <h3 class="section-title">Manage Match Scores</h3>
+                
+                <table class="admin-table" id="matchesTable">
+                    <thead>
+                        <tr>
+                            <th>Match</th>
+                            <th>Round</th>
+                            <th>Teams</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Match data will be loaded here -->
+                    </tbody>
+                </table>
+                
+                <div id="scoreFormContainer" style="display: none;">
+                    <h3 class="admin-title" id="scoreFormTitle">Update Match Score</h3>
+                    <form id="scoreForm">
+                        <div class="admin-form-group">
+                            <label class="admin-label">Match</label>
+                            <div id="matchTeams" style="color: var(--text); font-weight: 600; padding: 0.5rem 0;"></div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem;">
+                            <div class="admin-form-group" style="flex: 1;">
+                                <label for="team1Score" class="admin-label">Team 1 Score</label>
+                                <input type="number" id="team1Score" min="0" class="admin-input" required>
+                            </div>
+                            <div class="admin-form-group" style="flex: 1;">
+                                <label for="team2Score" class="admin-label">Team 2 Score</label>
+                                <input type="number" id="team2Score" min="0" class="admin-input" required>
+                            </div>
+                        </div>
+                        
+                        <div class="admin-form-group">
+                            <label for="matchStatus" class="admin-label">Match Status</label>
+                            <select id="matchStatus" class="admin-select">
+                                <option value="upcoming">Upcoming</option>
+                                <option value="live">Live</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="admin-actions">
+                            <button type="button" class="admin-button secondary" id="cancelScoreButton">Cancel</button>
+                            <button type="submit" class="admin-button primary" id="saveScoreButton">Save Score</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <footer class="site-footer">
         <div class="footer-content">
             <div class="social-icons">
@@ -1568,7 +2465,42 @@
     </footer>
     
     <script>
+        // Tournament data storage
+        let tournamentData = {
+            teams: [],
+            matches: [],
+            bracket: {
+                type: "single-elimination",
+                rounds: [],
+                settings: {}
+            }
+        };
+        
+        // Admin authentication
+        let isAdmin = false;
+        const ADMIN_PASSWORD = "admin123"; // In a real app, this would be server-side
+        
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize tabs
+            initTabs();
+            
+            // Initialize admin panel
+            initAdminPanel();
+            
+            // Initialize bracket visualization
+            initBrackets();
+            
+            // Initialize various event listeners
+            setupScrollListeners();
+            
+            // Load initial data
+            loadTournamentData();
+            
+            // Hide loading spinner
+            hideLoading();
+        });
+        
+        function initTabs() {
             // Tab switching
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => {
@@ -1591,25 +2523,1810 @@
                     document.getElementById(`${tabName}-content`).classList.add('active');
                 });
             });
+        }
+        
+        function initAdminPanel() {
+            // Admin login button
+            const adminLoginButton = document.getElementById('adminLoginButton');
+            const loginModal = document.getElementById('loginModal');
+            const loginForm = document.getElementById('loginForm');
+            const cancelLoginButton = document.getElementById('cancelLoginButton');
+            const adminPanel = document.getElementById('adminPanel');
+            const closeAdminPanel = document.getElementById('closeAdminPanel');
             
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
+            // Check if already logged in
+            if (localStorage.getItem('tournamentAdmin') === 'true') {
+                isAdmin = true;
+            }
+            
+            // Show login modal
+            adminLoginButton.addEventListener('click', () => {
+                if (isAdmin) {
+                    showAdminPanel();
+                } else {
+                    loginModal.classList.add('active');
+                    document.getElementById('passwordInput').focus();
+                }
+            });
+            
+            // Cancel login
+            cancelLoginButton.addEventListener('click', () => {
+                loginModal.classList.remove('active');
+                document.getElementById('loginError').textContent = '';
+            });
+            
+            // Submit login
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const password = document.getElementById('passwordInput').value;
+                
+                if (password === ADMIN_PASSWORD) {
+                    isAdmin = true;
+                    localStorage.setItem('tournamentAdmin', 'true');
+                    loginModal.classList.remove('active');
+                    document.getElementById('loginError').textContent = '';
+                    document.getElementById('passwordInput').value = '';
+                    showAdminPanel();
+                } else {
+                    document.getElementById('loginError').textContent = 'Invalid password';
+                }
+            });
+            
+            // Close admin panel
+            closeAdminPanel.addEventListener('click', () => {
+                adminPanel.classList.remove('active');
+            });
+            
+            // Admin tab switching
+            const adminTabs = document.querySelectorAll('.admin-tab');
+            adminTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Hide all section contents
+                    document.querySelectorAll('.admin-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Deactivate all tabs
+                    adminTabs.forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    // Activate clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding content
+                    const sectionName = tab.getAttribute('data-section');
+                    document.getElementById(`${sectionName}-section`).classList.add('active');
                 });
             });
             
-            // Initialize brackets if available
-            initializeBrackets();
+            // Initialize team management
+            initTeamManagement();
             
-            // Add scroll progress indicator
+            // Initialize bracket management
+            initBracketManagement();
+            
+            // Initialize score management
+            initScoreManagement();
+        }
+        
+        function showAdminPanel() {
+            document.getElementById('adminPanel').classList.add('active');
+            loadAdminData();
+        }
+        
+        function loadAdminData() {
+            // Load teams
+            loadTeamsForAdmin();
+            
+            // Load matches
+            loadMatchesForAdmin();
+            
+            // Load bracket data
+            loadBracketData();
+        }
+        
+        function initTeamManagement() {
+            const addTeamButton = document.getElementById('addTeamButton');
+            const teamFormContainer = document.getElementById('teamFormContainer');
+            const teamForm = document.getElementById('teamForm');
+            const cancelTeamButton = document.getElementById('cancelTeamButton');
+            const addPlayerButton = document.getElementById('addPlayerButton');
+            const playersList = document.getElementById('playersList');
+            
+            // Add team button
+            addTeamButton.addEventListener('click', () => {
+                // Reset form
+                document.getElementById('teamFormTitle').textContent = 'Add New Team';
+                teamForm.reset();
+                playersList.innerHTML = '';
+                addPlayerRow(); // Add one empty player row
+                
+                // Show form
+                teamFormContainer.style.display = 'block';
+            });
+            
+            // Cancel team button
+            cancelTeamButton.addEventListener('click', () => {
+                teamFormContainer.style.display = 'none';
+            });
+            
+            // Add player button
+            addPlayerButton.addEventListener('click', () => {
+                addPlayerRow();
+            });
+            
+            // Save team form
+            teamForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Get form values
+                const team = {
+                    id: Date.now().toString(), // Generate unique ID
+                    name: document.getElementById('teamName').value,
+                    tag: document.getElementById('teamTag').value,
+                    logo_url: document.getElementById('teamLogo').value,
+                    players: [],
+                    checked_in: false
+                };
+                
+                // Get players
+                const playerRows = playersList.querySelectorAll('.player-row');
+                playerRows.forEach((row, index) => {
+                    const playerName = row.querySelector('.player-name-input').value;
+                    const playerRegion = row.querySelector('.player-region-input').value;
+                    
+                    if (playerName) {
+                        team.players.push({
+                            id: `player_${Date.now()}_${index}`,
+                            name: playerName,
+                            region: playerRegion,
+                            clan: team.tag
+                        });
+                    }
+                });
+                
+                // Add team to data
+                tournamentData.teams.push(team);
+                
+                // Update UI
+                renderTeamGrid();
+                
+                // Hide form
+                teamFormContainer.style.display = 'none';
+                
+                // Update bracket view if needed
+                updateBracketView();
+            });
+        }
+        
+        function addPlayerRow() {
+            const playersList = document.getElementById('playersList');
+            const rowIndex = playersList.querySelectorAll('.player-row').length;
+            
+            const playerRow = document.createElement('div');
+            playerRow.className = 'player-row';
+            playerRow.style.display = 'flex';
+            playerRow.style.gap = '1rem';
+            playerRow.style.marginBottom = '1rem';
+            
+            playerRow.innerHTML = `
+                <div style="flex: 2;">
+                    <input type="text" class="admin-input player-name-input" placeholder="Player Name" required>
+                </div>
+                <div style="flex: 1;">
+                    <input type="text" class="admin-input player-region-input" placeholder="Region (e.g. EU, AS)">
+                </div>
+                <div style="flex: 0 0 40px; display: flex; align-items: center;">
+                    <button type="button" class="admin-icon-button delete remove-player-button">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            playersList.appendChild(playerRow);
+            
+            // Add event listener to remove button
+            playerRow.querySelector('.remove-player-button').addEventListener('click', () => {
+                playerRow.remove();
+            });
+            
+            // Focus on new input
+            playerRow.querySelector('.player-name-input').focus();
+        }
+        
+        function loadTeamsForAdmin() {
+            if (tournamentData.teams.length === 0) {
+                // If no teams loaded yet, try to get them from the page
+                const teamCards = document.querySelectorAll('.team-card');
+                
+                if (teamCards.length > 0) {
+                    teamCards.forEach(card => {
+                        const name = card.querySelector('.team-name').textContent;
+                        const tag = card.querySelector('.team-tag').textContent;
+                        const logoElement = card.querySelector('.team-logo img');
+                        const logo_url = logoElement ? logoElement.src : '';
+                        const checkedIn = card.querySelector('.team-status').classList.contains('checked-in');
+                        
+                        const players = [];
+                        const playerElements = card.querySelectorAll('.team-player');
+                        playerElements.forEach((playerEl, index) => {
+                            const playerName = playerEl.querySelector('.player-name').textContent;
+                            const regionEl = playerEl.querySelector('.player-meta div:first-child');
+                            const clanEl = playerEl.querySelector('.player-meta div:last-child');
+                            
+                            const region = regionEl ? regionEl.textContent.trim() : '';
+                            const clan = clanEl ? clanEl.textContent.trim() : '';
+                            
+                            players.push({
+                                id: `player_${index}`,
+                                name: playerName,
+                                region: region,
+                                clan: clan
+                            });
+                        });
+                        
+                        tournamentData.teams.push({
+                            id: `team_${tournamentData.teams.length + 1}`,
+                            name: name,
+                            tag: tag,
+                            logo_url: logo_url,
+                            players: players,
+                            checked_in: checkedIn
+                        });
+                    });
+                } else {
+                    // Add some example teams
+                    tournamentData.teams = [
+                        {
+                            id: 'team_1',
+                            name: 'Team Alpha',
+                            tag: 'ALPHA',
+                            logo_url: '',
+                            checked_in: true,
+                            players: [
+                                { id: 'player_1', name: 'Player One', region: 'EU', clan: 'ALPHA' },
+                                { id: 'player_2', name: 'Player Two', region: 'EU', clan: 'ALPHA' }
+                            ]
+                        },
+                        {
+                            id: 'team_2',
+                            name: 'Team Beta',
+                            tag: 'BETA',
+                            logo_url: '',
+                            checked_in: false,
+                            players: [
+                                { id: 'player_3', name: 'Player Three', region: 'AS', clan: 'BETA' },
+                                { id: 'player_4', name: 'Player Four', region: 'AS', clan: 'BETA' }
+                            ]
+                        }
+                    ];
+                }
+            }
+            
+            renderTeamGrid();
+        }
+        
+        function renderTeamGrid() {
+            const teamGrid = document.getElementById('adminTeamGrid');
+            teamGrid.innerHTML = '';
+            
+            if (tournamentData.teams.length === 0) {
+                teamGrid.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No teams added yet. Click the "Add Team" button to create a team.</p>';
+                return;
+            }
+            
+            tournamentData.teams.forEach(team => {
+                const teamItem = document.createElement('div');
+                teamItem.className = 'team-item';
+                teamItem.dataset.id = team.id;
+                
+                let logoContent;
+                if (team.logo_url) {
+                    logoContent = `<img src="${team.logo_url}" alt="${team.name} logo">`;
+                } else {
+                    logoContent = team.tag.substring(0, 2);
+                }
+                
+                teamItem.innerHTML = `
+                    <div class="team-item-header">
+                        <div class="team-item-logo">
+                            ${logoContent}
+                        </div>
+                        <div class="team-item-info">
+                            <div class="team-item-name">${team.name}</div>
+                            <div class="team-item-tag">${team.tag}</div>
+                        </div>
+                    </div>
+                    <div class="team-item-players">
+                        ${team.players.length} players
+                    </div>
+                    <div class="team-item-actions">
+                        <button class="admin-icon-button edit edit-team-button" data-id="${team.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="admin-icon-button delete delete-team-button" data-id="${team.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                teamGrid.appendChild(teamItem);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.edit-team-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const teamId = e.target.closest('.edit-team-button').dataset.id;
+                    editTeam(teamId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-team-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const teamId = e.target.closest('.delete-team-button').dataset.id;
+                    deleteTeam(teamId);
+                });
+            });
+        }
+        
+        function editTeam(teamId) {
+            const team = tournamentData.teams.find(t => t.id === teamId);
+            if (!team) return;
+            
+            // Set form title
+            document.getElementById('teamFormTitle').textContent = `Edit Team: ${team.name}`;
+            
+            // Fill form values
+            document.getElementById('teamName').value = team.name;
+            document.getElementById('teamTag').value = team.tag;
+            document.getElementById('teamLogo').value = team.logo_url || '';
+            
+            // Clear players list
+            const playersList = document.getElementById('playersList');
+            playersList.innerHTML = '';
+            
+            // Add player rows
+            if (team.players && team.players.length > 0) {
+                team.players.forEach(player => {
+                    addPlayerRow();
+                    const lastRow = playersList.lastElementChild;
+                    lastRow.querySelector('.player-name-input').value = player.name;
+                    lastRow.querySelector('.player-region-input').value = player.region || '';
+                });
+            } else {
+                addPlayerRow();
+            }
+            
+            // Show form
+            document.getElementById('teamFormContainer').style.display = 'block';
+            
+            // Update save button to update instead of create
+            const saveButton = document.getElementById('saveTeamButton');
+            saveButton.textContent = 'Update Team';
+            
+            // Replace submit handler
+            const teamForm = document.getElementById('teamForm');
+            const oldSubmitHandler = teamForm.onsubmit;
+            teamForm.onsubmit = (e) => {
+                e.preventDefault();
+                
+                // Update team data
+                team.name = document.getElementById('teamName').value;
+                team.tag = document.getElementById('teamTag').value;
+                team.logo_url = document.getElementById('teamLogo').value;
+                
+                // Update players
+                team.players = [];
+                const playerRows = playersList.querySelectorAll('.player-row');
+                playerRows.forEach((row, index) => {
+                    const playerName = row.querySelector('.player-name-input').value;
+                    const playerRegion = row.querySelector('.player-region-input').value;
+                    
+                    if (playerName) {
+                        team.players.push({
+                            id: `player_${Date.now()}_${index}`,
+                            name: playerName,
+                            region: playerRegion,
+                            clan: team.tag
+                        });
+                    }
+                });
+                
+                // Update UI
+                renderTeamGrid();
+                
+                // Hide form
+                document.getElementById('teamFormContainer').style.display = 'none';
+                
+                // Update bracket view if needed
+                updateBracketView();
+                
+                // Restore original handler
+                teamForm.onsubmit = oldSubmitHandler;
+            };
+        }
+        
+        function deleteTeam(teamId) {
+            if (confirm('Are you sure you want to delete this team?')) {
+                tournamentData.teams = tournamentData.teams.filter(t => t.id !== teamId);
+                renderTeamGrid();
+                
+                // Update bracket view if needed
+                updateBracketView();
+            }
+        }
+        
+        function initBracketManagement() {
+            const bracketType = document.getElementById('bracketType');
+            const groupSizeContainer = document.getElementById('groupSizeContainer');
+            const teamsPerGroupContainer = document.getElementById('teamsPerGroupContainer');
+            const advancingTeamsContainer = document.getElementById('advancingTeamsContainer');
+            const generateBracketButton = document.getElementById('generateBracketButton');
+            const resetBracketButton = document.getElementById('resetBracketButton');
+            
+            // Handle bracket type change
+            bracketType.addEventListener('change', () => {
+                const type = bracketType.value;
+                
+                // Show/hide relevant options
+                if (type === 'group-stage') {
+                    groupSizeContainer.style.display = 'block';
+                    teamsPerGroupContainer.style.display = 'block';
+                    advancingTeamsContainer.style.display = 'block';
+                } else {
+                    groupSizeContainer.style.display = 'none';
+                    teamsPerGroupContainer.style.display = 'none';
+                    advancingTeamsContainer.style.display = 'none';
+                }
+            });
+            
+            // Generate bracket
+            generateBracketButton.addEventListener('click', () => {
+                const type = bracketType.value;
+                const seeding = document.getElementById('bracketSeeding').value;
+                
+                let settings = {
+                    type: type,
+                    seeding: seeding
+                };
+                
+                if (type === 'group-stage') {
+                    settings.groupCount = parseInt(document.getElementById('groupSize').value);
+                    settings.teamsPerGroup = parseInt(document.getElementById('teamsPerGroup').value);
+                    settings.advancingTeams = parseInt(document.getElementById('advancingTeams').value);
+                }
+                
+                generateBracket(settings);
+            });
+            
+            // Reset bracket
+            resetBracketButton.addEventListener('click', () => {
+                if (confirm('Are you sure you want to reset the bracket? All match data will be lost.')) {
+                    tournamentData.bracket = {
+                        type: "single-elimination",
+                        rounds: [],
+                        settings: {}
+                    };
+                    
+                    tournamentData.matches = [];
+                    
+                    // Update UI
+                    updateBracketView();
+                    loadMatchesForAdmin();
+                }
+            });
+        }
+        
+        function generateBracket(settings) {
+            // Store settings
+            tournamentData.bracket.settings = settings;
+            tournamentData.bracket.type = settings.type;
+            
+            // Generate bracket based on type
+            if (settings.type === 'single-elimination') {
+                generateSingleEliminationBracket(settings);
+            } else if (settings.type === 'double-elimination') {
+                generateDoubleEliminationBracket(settings);
+            } else if (settings.type === 'group-stage') {
+                generateGroupStageBracket(settings);
+            } else if (settings.type === 'round-robin') {
+                generateRoundRobinBracket(settings);
+            }
+            
+            // Update UI
+            updateBracketView();
+            
+            // Generate matches from bracket
+            generateMatchesFromBracket();
+            
+            // Update matches table
+            loadMatchesForAdmin();
+        }
+        
+        function generateSingleEliminationBracket(settings) {
+            const teams = [...tournamentData.teams];
+            
+            // Determine number of rounds needed based on team count
+            const teamCount = teams.length;
+            const roundCount = Math.ceil(Math.log2(teamCount));
+            const perfectBracketSize = Math.pow(2, roundCount);
+            
+            // Seed teams
+            let seededTeams = [];
+            if (settings.seeding === 'random') {
+                // Shuffle teams
+                seededTeams = shuffle([...teams]);
+            } else {
+                // Manual seeding - just use the order they are in
+                seededTeams = [...teams];
+            }
+            
+            // Add byes for perfect bracket
+            while (seededTeams.length < perfectBracketSize) {
+                seededTeams.push({ id: `bye_${seededTeams.length}`, name: 'BYE', tag: 'BYE', isBye: true });
+            }
+            
+            // Generate rounds
+            const rounds = [];
+            
+            // First round
+            const firstRound = {
+                name: 'Round 1',
+                matches: []
+            };
+            
+            for (let i = 0; i < seededTeams.length; i += 2) {
+                const team1 = seededTeams[i];
+                const team2 = seededTeams[i + 1];
+                
+                firstRound.matches.push({
+                    id: `match_${rounds.length}_${firstRound.matches.length}`,
+                    team1: team1,
+                    team2: team2,
+                    score1: null,
+                    score2: null,
+                    winner: null,
+                    round: 1,
+                    position: firstRound.matches.length + 1
+                });
+            }
+            
+            rounds.push(firstRound);
+            
+            // Subsequent rounds
+            for (let r = 1; r < roundCount; r++) {
+                const roundMatches = [];
+                const previousRound = rounds[r - 1];
+                const matchCount = previousRound.matches.length / 2;
+                
+                for (let i = 0; i < matchCount; i++) {
+                    roundMatches.push({
+                        id: `match_${r}_${i}`,
+                        team1: null,
+                        team2: null,
+                        score1: null,
+                        score2: null,
+                        winner: null,
+                        round: r + 1,
+                        position: i + 1
+                    });
+                }
+                
+                rounds.push({
+                    name: r === roundCount - 1 ? 'Final' : (r === roundCount - 2 ? 'Semifinals' : `Round ${r + 1}`),
+                    matches: roundMatches
+                });
+            }
+            
+            tournamentData.bracket.rounds = rounds;
+            
+            // Handle byes in first round
+            firstRound.matches.forEach(match => {
+                if (match.team1.isBye && !match.team2.isBye) {
+                    // Team 2 advances
+                    match.winner = match.team2;
+                    match.score1 = 0;
+                    match.score2 = 1;
+                    advanceTeamInBracket(match.team2, 1, match.position);
+                } else if (!match.team1.isBye && match.team2.isBye) {
+                    // Team 1 advances
+                    match.winner = match.team1;
+                    match.score1 = 1;
+                    match.score2 = 0;
+                    advanceTeamInBracket(match.team1, 1, match.position);
+                }
+            });
+        }
+        
+        function generateDoubleEliminationBracket(settings) {
+            // Similar to single elimination but with a losers bracket
+            const teams = [...tournamentData.teams];
+            
+            // Determine number of rounds needed based on team count
+            const teamCount = teams.length;
+            const roundCount = Math.ceil(Math.log2(teamCount));
+            const perfectBracketSize = Math.pow(2, roundCount);
+            
+            // Seed teams
+            let seededTeams = [];
+            if (settings.seeding === 'random') {
+                // Shuffle teams
+                seededTeams = shuffle([...teams]);
+            } else {
+                // Manual seeding - just use the order they are in
+                seededTeams = [...teams];
+            }
+            
+            // Add byes for perfect bracket
+            while (seededTeams.length < perfectBracketSize) {
+                seededTeams.push({ id: `bye_${seededTeams.length}`, name: 'BYE', tag: 'BYE', isBye: true });
+            }
+            
+            // For simplicity, we'll just generate the winners bracket for now
+            // In a real implementation, you would also generate the losers bracket
+            // and track teams that get eliminated from winners bracket
+            
+            // Generate winners bracket rounds
+            const rounds = [];
+            
+            // First round
+            const firstRound = {
+                name: 'Round 1 (Winners)',
+                matches: []
+            };
+            
+            for (let i = 0; i < seededTeams.length; i += 2) {
+                const team1 = seededTeams[i];
+                const team2 = seededTeams[i + 1];
+                
+                firstRound.matches.push({
+                    id: `match_w_${rounds.length}_${firstRound.matches.length}`,
+                    team1: team1,
+                    team2: team2,
+                    score1: null,
+                    score2: null,
+                    winner: null,
+                    round: 1,
+                    position: firstRound.matches.length + 1,
+                    bracket: 'winners'
+                });
+            }
+            
+            rounds.push(firstRound);
+            
+            // Subsequent rounds in winners bracket
+            for (let r = 1; r < roundCount; r++) {
+                const roundMatches = [];
+                const previousRound = rounds[r - 1];
+                const matchCount = previousRound.matches.length / 2;
+                
+                for (let i = 0; i < matchCount; i++) {
+                    roundMatches.push({
+                        id: `match_w_${r}_${i}`,
+                        team1: null,
+                        team2: null,
+                        score1: null,
+                        score2: null,
+                        winner: null,
+                        round: r + 1,
+                        position: i + 1,
+                        bracket: 'winners'
+                    });
+                }
+                
+                rounds.push({
+                    name: r === roundCount - 1 ? 'Winners Final' : `Winners Round ${r + 1}`,
+                    matches: roundMatches
+                });
+            }
+            
+            // Add grand finals
+            rounds.push({
+                name: 'Grand Finals',
+                matches: [
+                    {
+                        id: 'match_grand_finals',
+                        team1: null, // Winners bracket winner
+                        team2: null, // Losers bracket winner
+                        score1: null,
+                        score2: null,
+                        winner: null,
+                        round: roundCount + 1,
+                        position: 1,
+                        bracket: 'grand'
+                    }
+                ]
+            });
+            
+            tournamentData.bracket.rounds = rounds;
+            
+            // Handle byes in first round
+            firstRound.matches.forEach(match => {
+                if (match.team1.isBye && !match.team2.isBye) {
+                    // Team 2 advances
+                    match.winner = match.team2;
+                    match.score1 = 0;
+                    match.score2 = 1;
+                    advanceTeamInBracket(match.team2, 1, match.position, 'winners');
+                } else if (!match.team1.isBye && match.team2.isBye) {
+                    // Team 1 advances
+                    match.winner = match.team1;
+                    match.score1 = 1;
+                    match.score2 = 0;
+                    advanceTeamInBracket(match.team1, 1, match.position, 'winners');
+                }
+            });
+        }
+        
+        function generateGroupStageBracket(settings) {
+            const teams = [...tournamentData.teams];
+            const groupCount = settings.groupCount || 2;
+            const teamsPerGroup = settings.teamsPerGroup || 4;
+            
+            // Seed teams
+            let seededTeams = [];
+            if (settings.seeding === 'random') {
+                // Shuffle teams
+                seededTeams = shuffle([...teams]);
+            } else {
+                // Manual seeding - just use the order they are in
+                seededTeams = [...teams];
+            }
+            
+            // Create groups
+            const groups = [];
+            for (let g = 0; g < groupCount; g++) {
+                const group = {
+                    name: `Group ${String.fromCharCode(65 + g)}`, // A, B, C, etc.
+                    teams: [],
+                    matches: []
+                };
+                
+                // Add teams to group
+                for (let t = 0; t < teamsPerGroup; t++) {
+                    const teamIndex = g * teamsPerGroup + t;
+                    if (teamIndex < seededTeams.length) {
+                        group.teams.push(seededTeams[teamIndex]);
+                    } else {
+                        // Add dummy team if we run out
+                        group.teams.push({
+                            id: `dummy_${g}_${t}`,
+                            name: `TBD`,
+                            tag: 'TBD',
+                            isDummy: true
+                        });
+                    }
+                }
+                
+                // Generate round-robin matches within group
+                for (let i = 0; i < group.teams.length; i++) {
+                    for (let j = i + 1; j < group.teams.length; j++) {
+                        group.matches.push({
+                            id: `match_group_${g}_${i}_${j}`,
+                            team1: group.teams[i],
+                            team2: group.teams[j],
+                            score1: null,
+                            score2: null,
+                            winner: null,
+                            group: g,
+                            round: 'group'
+                        });
+                    }
+                }
+                
+                groups.push(group);
+            }
+            
+            // Set up the bracket for the groups
+            tournamentData.bracket.groups = groups;
+            tournamentData.bracket.rounds = [];
+            
+            // If we have advancing teams, set up a playoff bracket
+            const advancingTeams = settings.advancingTeams || 2;
+            if (advancingTeams > 0) {
+                // Generate playoff bracket - simplified for this example
+                const playoffTeamCount = groupCount * advancingTeams;
+                const roundCount = Math.ceil(Math.log2(playoffTeamCount));
+                
+                // Create playoff rounds
+                const rounds = [];
+                
+                // First round
+                const firstRound = {
+                    name: 'Playoffs Round 1',
+                    matches: []
+                };
+                
+                // Create first round matches
+                // This logic is simplified and would need more work for proper seeding
+                for (let i = 0; i < playoffTeamCount; i += 2) {
+                    firstRound.matches.push({
+                        id: `match_playoff_1_${i/2}`,
+                        team1: {
+                            id: `placeholder_${i}`,
+                            name: `${groups[Math.floor(i/advancingTeams)].name} #${(i % advancingTeams) + 1}`,
+                            tag: 'TBD',
+                            isPlaceholder: true,
+                            groupRef: {
+                                group: Math.floor(i/advancingTeams),
+                                position: (i % advancingTeams) + 1
+                            }
+                        },
+                        team2: {
+                            id: `placeholder_${i+1}`,
+                            name: `${groups[Math.floor((i+1)/advancingTeams)].name} #${((i+1) % advancingTeams) + 1}`,
+                            tag: 'TBD',
+                            isPlaceholder: true,
+                            groupRef: {
+                                group: Math.floor((i+1)/advancingTeams),
+                                position: ((i+1) % advancingTeams) + 1
+                            }
+                        },
+                        score1: null,
+                        score2: null,
+                        winner: null,
+                        round: 1,
+                        position: firstRound.matches.length + 1
+                    });
+                }
+                
+                rounds.push(firstRound);
+                
+                // Subsequent rounds
+                for (let r = 1; r < roundCount; r++) {
+                    const roundMatches = [];
+                    const previousRound = rounds[r - 1];
+                    const matchCount = previousRound.matches.length / 2;
+                    
+                    for (let i = 0; i < matchCount; i++) {
+                        roundMatches.push({
+                            id: `match_playoff_${r+1}_${i}`,
+                            team1: null,
+                            team2: null,
+                            score1: null,
+                            score2: null,
+                            winner: null,
+                            round: r + 1,
+                            position: i + 1
+                        });
+                    }
+                    
+                    rounds.push({
+                        name: r === roundCount - 1 ? 'Final' : (r === roundCount - 2 ? 'Semifinals' : `Playoffs Round ${r + 1}`),
+                        matches: roundMatches
+                    });
+                }
+                
+                tournamentData.bracket.rounds = rounds;
+            }
+        }
+        
+        function generateRoundRobinBracket(settings) {
+            const teams = [...tournamentData.teams];
+            
+            // Seed teams
+            let seededTeams = [];
+            if (settings.seeding === 'random') {
+                // Shuffle teams
+                seededTeams = shuffle([...teams]);
+            } else {
+                // Manual seeding - just use the order they are in
+                seededTeams = [...teams];
+            }
+            
+            // Create a single group with all teams
+            const group = {
+                name: 'Round Robin',
+                teams: seededTeams,
+                matches: []
+            };
+            
+            // Generate round-robin matches
+            for (let i = 0; i < seededTeams.length; i++) {
+                for (let j = i + 1; j < seededTeams.length; j++) {
+                    group.matches.push({
+                        id: `match_robin_${i}_${j}`,
+                        team1: seededTeams[i],
+                        team2: seededTeams[j],
+                        score1: null,
+                        score2: null,
+                        winner: null,
+                        group: 0,
+                        round: 'robin'
+                    });
+                }
+            }
+            
+            // Set up the bracket
+            tournamentData.bracket.groups = [group];
+            tournamentData.bracket.rounds = [];
+        }
+        
+        function advanceTeamInBracket(team, fromRound, fromPosition, bracket = 'winners') {
+            if (!team || fromRound >= tournamentData.bracket.rounds.length - 1) return;
+            
+            const nextRound = tournamentData.bracket.rounds[fromRound];
+            const nextPosition = Math.ceil(fromPosition / 2);
+            
+            // Find the match in the next round
+            const nextMatch = nextRound.matches.find(m => m.position === nextPosition && (m.bracket === bracket || !m.bracket));
+            
+            if (!nextMatch) return;
+            
+            // Determine if team is team1 or team2 in the next match
+            if (fromPosition % 2 === 1) {
+                // Odd position goes to team1
+                nextMatch.team1 = team;
+            } else {
+                // Even position goes to team2
+                nextMatch.team2 = team;
+            }
+        }
+        
+        function updateBracketView() {
+            // Update the bracket in the brackets tab
+            const bracketDisplay = document.getElementById('bracket-display');
+            
+            if (tournamentData.bracket.type === 'single-elimination') {
+                renderSingleEliminationBracket(bracketDisplay);
+            } else if (tournamentData.bracket.type === 'double-elimination') {
+                renderDoubleEliminationBracket(bracketDisplay);
+            } else if (tournamentData.bracket.type === 'group-stage') {
+                renderGroupStageBracket(bracketDisplay);
+            } else if (tournamentData.bracket.type === 'round-robin') {
+                renderRoundRobinBracket(bracketDisplay);
+            }
+            
+            // Also update the bracket preview in the admin panel
+            const bracketPreview = document.getElementById('bracketPreview');
+            bracketPreview.innerHTML = `
+                <h4 style="margin-bottom: 1rem; color: var(--text-muted);">Bracket Preview</h4>
+                <div style="background-color: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0.5rem; text-align: center;">
+                    <p>Bracket type: ${tournamentData.bracket.type}</p>
+                    <p>Total teams: ${tournamentData.teams.length}</p>
+                    <p>Bracket created successfully</p>
+                </div>
+            `;
+        }
+        
+        function renderSingleEliminationBracket(container) {
+            container.innerHTML = '';
+            
+            if (!tournamentData.bracket.rounds || tournamentData.bracket.rounds.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-diagram-project"></i>
+                        </div>
+                        <h3 class="empty-title">Bracket Not Available Yet</h3>
+                        <p class="empty-message">
+                            Tournament brackets will be published once registration closes and the tournament begins.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create bracket wrapper
+            const bracketWrapper = document.createElement('div');
+            bracketWrapper.className = 'bracket-wrapper';
+            
+            // Create rounds container
+            const roundsContainer = document.createElement('div');
+            roundsContainer.className = 'bracket-rounds';
+            
+            // Render each round
+            tournamentData.bracket.rounds.forEach((round, roundIndex) => {
+                const roundElement = document.createElement('div');
+                roundElement.className = 'bracket-round';
+                
+                const roundTitle = document.createElement('div');
+                roundTitle.className = 'bracket-title';
+                roundTitle.textContent = round.name;
+                roundElement.appendChild(roundTitle);
+                
+                const matchesContainer = document.createElement('div');
+                matchesContainer.className = 'bracket-matches';
+                
+                // Calculate spacing between matches
+                const matchCount = round.matches.length;
+                const totalRounds = tournamentData.bracket.rounds.length;
+                const matchSpacing = Math.pow(2, totalRounds - roundIndex - 1) * 30;
+                
+                // Render each match
+                round.matches.forEach((match, matchIndex) => {
+                    const matchWrapper = document.createElement('div');
+                    matchWrapper.className = 'bracket-match-wrapper';
+                    matchWrapper.style.marginTop = matchIndex === 0 ? '0' : `${matchSpacing}px`;
+                    
+                    const matchElement = document.createElement('div');
+                    matchElement.className = 'bracket-match';
+                    
+                    const matchHeader = document.createElement('div');
+                    matchHeader.className = 'bracket-match-header';
+                    matchHeader.innerHTML = `
+                        <span>Match ${matchIndex + 1}</span>
+                        <span>${round.name}</span>
+                    `;
+                    matchElement.appendChild(matchHeader);
+                    
+                    const team1Element = document.createElement('div');
+                    team1Element.className = `bracket-team ${match.winner === match.team1 ? 'winner' : ''}`;
+                    team1Element.innerHTML = `
+                        <div class="bracket-team-info">
+                            <span class="bracket-team-seed">1</span>
+                            <span class="bracket-team-name">${match.team1 ? match.team1.name : 'TBD'}</span>
+                        </div>
+                        <div class="bracket-team-score">${match.score1 !== null ? match.score1 : '-'}</div>
+                    `;
+                    matchElement.appendChild(team1Element);
+                    
+                    const team2Element = document.createElement('div');
+                    team2Element.className = `bracket-team ${match.winner === match.team2 ? 'winner' : ''}`;
+                    team2Element.innerHTML = `
+                        <div class="bracket-team-info">
+                            <span class="bracket-team-seed">2</span>
+                            <span class="bracket-team-name">${match.team2 ? match.team2.name : 'TBD'}</span>
+                        </div>
+                        <div class="bracket-team-score">${match.score2 !== null ? match.score2 : '-'}</div>
+                    `;
+                    matchElement.appendChild(team2Element);
+                    
+                    matchWrapper.appendChild(matchElement);
+                    
+                    // Add connectors if not the last round
+                    if (roundIndex < totalRounds - 1) {
+                        const horizontal = document.createElement('div');
+                        horizontal.className = 'connector-horizontal';
+                        horizontal.style.top = '50%';
+                        horizontal.style.width = '20px';
+                        horizontal.style.transform = 'translateY(-50%)';
+                        matchWrapper.appendChild(horizontal);
+                        
+                        if (matchIndex % 2 === 0) {
+                            const vertical = document.createElement('div');
+                            vertical.className = 'connector-vertical';
+                            vertical.style.top = '50%';
+                            vertical.style.height = `${matchSpacing + 30}px`;
+                            matchWrapper.appendChild(vertical);
+                        }
+                    }
+                    
+                    matchesContainer.appendChild(matchWrapper);
+                });
+                
+                roundElement.appendChild(matchesContainer);
+                roundsContainer.appendChild(roundElement);
+            });
+            
+            bracketWrapper.appendChild(roundsContainer);
+            container.appendChild(bracketWrapper);
+        }
+        
+        function renderDoubleEliminationBracket(container) {
+            // Similar to single elimination but with winners and losers brackets
+            // This would be more complex in a real implementation
+            renderSingleEliminationBracket(container);
+        }
+        
+        function renderGroupStageBracket(container) {
+            container.innerHTML = '';
+            
+            if (!tournamentData.bracket.groups || tournamentData.bracket.groups.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-diagram-project"></i>
+                        </div>
+                        <h3 class="empty-title">Bracket Not Available Yet</h3>
+                        <p class="empty-message">
+                            Tournament brackets will be published once registration closes and the tournament begins.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create group stage wrapper
+            const groupWrapper = document.createElement('div');
+            groupWrapper.className = 'group-wrapper';
+            
+            // Render each group
+            tournamentData.bracket.groups.forEach(group => {
+                const groupCard = document.createElement('div');
+                groupCard.className = 'group-card';
+                
+                const groupHeader = document.createElement('div');
+                groupHeader.className = 'group-header';
+                groupHeader.textContent = group.name;
+                groupCard.appendChild(groupHeader);
+                
+                // Create group standings table
+                const table = document.createElement('table');
+                table.className = 'group-table';
+                
+                const thead = document.createElement('thead');
+                thead.innerHTML = `
+                    <tr>
+                        <th>Pos</th>
+                        <th>Team</th>
+                        <th>W</th>
+                        <th>L</th>
+                        <th>Pts</th>
+                    </tr>
+                `;
+                table.appendChild(thead);
+                
+                const tbody = document.createElement('tbody');
+                
+                // Calculate standings
+                const standings = calculateGroupStandings(group);
+                
+                // Render standings
+                standings.forEach((team, index) => {
+                    const row = document.createElement('tr');
+                    
+                    let positionClass = '';
+                    if (index === 0) positionClass = 'group-position-1';
+                    else if (index === 1) positionClass = 'group-position-2';
+                    
+                    row.innerHTML = `
+                        <td>
+                            <div class="group-position ${positionClass}">${index + 1}</div>
+                        </td>
+                        <td>
+                            <div class="group-team">
+                                <div class="group-team-logo">
+                                    ${team.logo_url ? `<img src="${team.logo_url}" alt="${team.name} logo">` : team.name.substring(0, 2)}
+                                </div>
+                                <span>${team.name}</span>
+                            </div>
+                        </td>
+                        <td>${team.wins || 0}</td>
+                        <td>${team.losses || 0}</td>
+                        <td>${team.points || 0}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                table.appendChild(tbody);
+                groupCard.appendChild(table);
+                groupWrapper.appendChild(groupCard);
+            });
+            
+            container.appendChild(groupWrapper);
+            
+            // If there are playoff rounds, render them
+            if (tournamentData.bracket.rounds && tournamentData.bracket.rounds.length > 0) {
+                const playoffTitle = document.createElement('h3');
+                playoffTitle.className = 'section-title';
+                playoffTitle.textContent = 'Playoffs';
+                playoffTitle.style.marginTop = '2rem';
+                container.appendChild(playoffTitle);
+                
+                const bracketWrapper = document.createElement('div');
+                bracketWrapper.className = 'bracket-wrapper';
+                
+                // Create rounds container
+                const roundsContainer = document.createElement('div');
+                roundsContainer.className = 'bracket-rounds';
+                
+                // Render each round
+                tournamentData.bracket.rounds.forEach((round, roundIndex) => {
+                    const roundElement = document.createElement('div');
+                    roundElement.className = 'bracket-round';
+                    
+                    const roundTitle = document.createElement('div');
+                    roundTitle.className = 'bracket-title';
+                    roundTitle.textContent = round.name;
+                    roundElement.appendChild(roundTitle);
+                    
+                    const matchesContainer = document.createElement('div');
+                    matchesContainer.className = 'bracket-matches';
+                    
+                    // Calculate spacing between matches
+                    const matchCount = round.matches.length;
+                    const totalRounds = tournamentData.bracket.rounds.length;
+                    const matchSpacing = Math.pow(2, totalRounds - roundIndex - 1) * 30;
+                    
+                    // Render each match
+                    round.matches.forEach((match, matchIndex) => {
+                        const matchWrapper = document.createElement('div');
+                        matchWrapper.className = 'bracket-match-wrapper';
+                        matchWrapper.style.marginTop = matchIndex === 0 ? '0' : `${matchSpacing}px`;
+                        
+                        const matchElement = document.createElement('div');
+                        matchElement.className = 'bracket-match';
+                        
+                        const matchHeader = document.createElement('div');
+                        matchHeader.className = 'bracket-match-header';
+                        matchHeader.innerHTML = `
+                            <span>Match ${matchIndex + 1}</span>
+                            <span>${round.name}</span>
+                        `;
+                        matchElement.appendChild(matchHeader);
+                        
+                        const team1Element = document.createElement('div');
+                        team1Element.className = `bracket-team ${match.winner === match.team1 ? 'winner' : ''}`;
+                        team1Element.innerHTML = `
+                            <div class="bracket-team-info">
+                                <span class="bracket-team-seed">1</span>
+                                <span class="bracket-team-name">${match.team1 ? match.team1.name : 'TBD'}</span>
+                            </div>
+                            <div class="bracket-team-score">${match.score1 !== null ? match.score1 : '-'}</div>
+                        `;
+                        matchElement.appendChild(team1Element);
+                        
+                        const team2Element = document.createElement('div');
+                        team2Element.className = `bracket-team ${match.winner === match.team2 ? 'winner' : ''}`;
+                        team2Element.innerHTML = `
+                            <div class="bracket-team-info">
+                                <span class="bracket-team-seed">2</span>
+                                <span class="bracket-team-name">${match.team2 ? match.team2.name : 'TBD'}</span>
+                            </div>
+                            <div class="bracket-team-score">${match.score2 !== null ? match.score2 : '-'}</div>
+                        `;
+                        matchElement.appendChild(team2Element);
+                        
+                        matchWrapper.appendChild(matchElement);
+                        
+                        // Add connectors if not the last round
+                        if (roundIndex < totalRounds - 1) {
+                            const horizontal = document.createElement('div');
+                            horizontal.className = 'connector-horizontal';
+                            horizontal.style.top = '50%';
+                            horizontal.style.width = '20px';
+                            horizontal.style.transform = 'translateY(-50%)';
+                            matchWrapper.appendChild(horizontal);
+                            
+                            if (matchIndex % 2 === 0) {
+                                const vertical = document.createElement('div');
+                                vertical.className = 'connector-vertical';
+                                vertical.style.top = '50%';
+                                vertical.style.height = `${matchSpacing + 30}px`;
+                                matchWrapper.appendChild(vertical);
+                            }
+                        }
+                        
+                        matchesContainer.appendChild(matchWrapper);
+                    });
+                    
+                    roundElement.appendChild(matchesContainer);
+                    roundsContainer.appendChild(roundElement);
+                });
+                
+                bracketWrapper.appendChild(roundsContainer);
+                container.appendChild(bracketWrapper);
+            }
+        }
+        
+        function renderRoundRobinBracket(container) {
+            // Similar to group stage but with just one group
+            container.innerHTML = '';
+            
+            if (!tournamentData.bracket.groups || tournamentData.bracket.groups.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-diagram-project"></i>
+                        </div>
+                        <h3 class="empty-title">Bracket Not Available Yet</h3>
+                        <p class="empty-message">
+                            Tournament brackets will be published once registration closes and the tournament begins.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create standings wrapper
+            const standingsWrapper = document.createElement('div');
+            standingsWrapper.className = 'overview-card';
+            standingsWrapper.style.marginBottom = '2rem';
+            
+            const standingsHeader = document.createElement('div');
+            standingsHeader.className = 'info-card-header';
+            standingsHeader.innerHTML = `
+                <h3 class="info-card-title">
+                    <i class="fas fa-trophy"></i> Tournament Standings
+                </h3>
+            `;
+            standingsWrapper.appendChild(standingsHeader);
+            
+            const standingsBody = document.createElement('div');
+            standingsBody.className = 'info-card-body';
+            
+            // Create standings table
+            const table = document.createElement('table');
+            table.className = 'group-table';
+            table.style.width = '100%';
+            
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th>Pos</th>
+                    <th>Team</th>
+                    <th>W</th>
+                    <th>L</th>
+                    <th>Pts</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+            
+            const tbody = document.createElement('tbody');
+            
+            // Calculate standings
+            const standings = calculateGroupStandings(tournamentData.bracket.groups[0]);
+            
+            // Render standings
+            standings.forEach((team, index) => {
+                const row = document.createElement('tr');
+                
+                let positionClass = '';
+                if (index === 0) positionClass = 'group-position-1';
+                else if (index === 1) positionClass = 'group-position-2';
+                else if (index === 2) positionClass = 'group-position-3';
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="group-position ${positionClass}">${index + 1}</div>
+                    </td>
+                    <td>
+                        <div class="group-team">
+                            <div class="group-team-logo">
+                                ${team.logo_url ? `<img src="${team.logo_url}" alt="${team.name} logo">` : team.name.substring(0, 2)}
+                            </div>
+                            <span>${team.name}</span>
+                        </div>
+                    </td>
+                    <td>${team.wins || 0}</td>
+                    <td>${team.losses || 0}</td>
+                    <td>${team.points || 0}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            table.appendChild(tbody);
+            standingsBody.appendChild(table);
+            standingsWrapper.appendChild(standingsBody);
+            container.appendChild(standingsWrapper);
+            
+            // Create matches wrapper
+            const matchesWrapper = document.createElement('div');
+            matchesWrapper.className = 'overview-card';
+            
+            const matchesHeader = document.createElement('div');
+            matchesHeader.className = 'info-card-header';
+            matchesHeader.innerHTML = `
+                <h3 class="info-card-title">
+                    <i class="fas fa-gamepad"></i> Round Robin Matches
+                </h3>
+            `;
+            matchesWrapper.appendChild(matchesHeader);
+            
+            const matchesBody = document.createElement('div');
+            matchesBody.className = 'info-card-body';
+            
+            // Create matches list
+            const matchesList = document.createElement('div');
+            matchesList.className = 'matches-list';
+            
+            // Group matches by round
+            const group = tournamentData.bracket.groups[0];
+            const matchesByTeam = {};
+            
+            group.teams.forEach(team => {
+                matchesByTeam[team.id] = [];
+            });
+            
+            group.matches.forEach(match => {
+                if (match.team1 && match.team1.id) {
+                    matchesByTeam[match.team1.id].push(match);
+                }
+                if (match.team2 && match.team2.id) {
+                    matchesByTeam[match.team2.id].push(match);
+                }
+            });
+            
+            // Create match cards
+            group.matches.forEach(match => {
+                const matchCard = document.createElement('div');
+                matchCard.className = 'match-card';
+                
+                if (match.status === 'live') {
+                    matchCard.classList.add('live');
+                }
+                
+                matchCard.innerHTML = `
+                    <div class="match-meta">
+                        <div class="match-meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>Round Robin</span>
+                        </div>
+                        <div class="match-meta-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>TBD</span>
+                        </div>
+                        <div class="match-meta-item">
+                            <i class="fas fa-gamepad"></i>
+                            <span>BO1</span>
+                        </div>
+                    </div>
+                    <div class="match-teams">
+                        <div class="match-team">
+                            <div class="match-logo">
+                                ${match.team1 && match.team1.logo_url ? 
+                                    `<img src="${match.team1.logo_url}" alt="${match.team1.name} logo">` : 
+                                    `<div class="match-logo-placeholder">
+                                        <i class="fas fa-users"></i>
+                                    </div>`
+                                }
+                            </div>
+                            <div class="match-team-name">${match.team1 ? match.team1.name : 'TBD'}</div>
+                        </div>
+                        
+                        <div class="match-score">
+                            <span>${match.score1 !== null ? match.score1 : '-'}</span>
+                            <div class="vs">VS</div>
+                            <span>${match.score2 !== null ? match.score2 : '-'}</span>
+                        </div>
+                        
+                        <div class="match-team">
+                            <div class="match-logo">
+                                ${match.team2 && match.team2.logo_url ? 
+                                    `<img src="${match.team2.logo_url}" alt="${match.team2.name} logo">` : 
+                                    `<div class="match-logo-placeholder">
+                                        <i class="fas fa-users"></i>
+                                    </div>`
+                                }
+                            </div>
+                            <div class="match-team-name">${match.team2 ? match.team2.name : 'TBD'}</div>
+                        </div>
+                    </div>
+                `;
+                
+                matchesList.appendChild(matchCard);
+            });
+            
+            matchesBody.appendChild(matchesList);
+            matchesWrapper.appendChild(matchesBody);
+            container.appendChild(matchesWrapper);
+        }
+        
+        function calculateGroupStandings(group) {
+            const standings = {};
+            
+            // Initialize standings
+            group.teams.forEach(team => {
+                standings[team.id] = {
+                    ...team,
+                    wins: 0,
+                    losses: 0,
+                    draws: 0,
+                    points: 0,
+                    matchesPlayed: 0
+                };
+            });
+            
+            // Calculate standings from matches
+            group.matches.forEach(match => {
+                if (match.score1 !== null && match.score2 !== null) {
+                    const team1 = standings[match.team1.id];
+                    const team2 = standings[match.team2.id];
+                    
+                    team1.matchesPlayed++;
+                    team2.matchesPlayed++;
+                    
+                    if (match.score1 > match.score2) {
+                        team1.wins++;
+                        team1.points += 3;
+                        team2.losses++;
+                    } else if (match.score1 < match.score2) {
+                        team2.wins++;
+                        team2.points += 3;
+                        team1.losses++;
+                    } else {
+                        team1.draws++;
+                        team2.draws++;
+                        team1.points += 1;
+                        team2.points += 1;
+                    }
+                }
+            });
+            
+            // Convert to array and sort
+            return Object.values(standings).sort((a, b) => {
+                // Sort by points
+                if (a.points !== b.points) {
+                    return b.points - a.points;
+                }
+                
+                // If points are tied, sort by head-to-head
+                const headToHead = group.matches.find(m => 
+                    (m.team1.id === a.id && m.team2.id === b.id) || 
+                    (m.team1.id === b.id && m.team2.id === a.id)
+                );
+                
+                if (headToHead && headToHead.score1 !== null && headToHead.score2 !== null) {
+                    if (headToHead.team1.id === a.id) {
+                        if (headToHead.score1 > headToHead.score2) return -1;
+                        if (headToHead.score1 < headToHead.score2) return 1;
+                    } else {
+                        if (headToHead.score2 > headToHead.score1) return -1;
+                        if (headToHead.score2 < headToHead.score1) return 1;
+                    }
+                }
+                
+                // If still tied, sort by win count
+                if (a.wins !== b.wins) {
+                    return b.wins - a.wins;
+                }
+                
+                // If still tied, sort alphabetically
+                return a.name.localeCompare(b.name);
+            });
+        }
+        
+        function initScoreManagement() {
+            const scoreFormContainer = document.getElementById('scoreFormContainer');
+            const scoreForm = document.getElementById('scoreForm');
+            const cancelScoreButton = document.getElementById('cancelScoreButton');
+            
+            // Cancel score button
+            cancelScoreButton.addEventListener('click', () => {
+                scoreFormContainer.style.display = 'none';
+            });
+            
+            // Save score form
+            scoreForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const matchId = scoreForm.dataset.matchId;
+                const team1Score = parseInt(document.getElementById('team1Score').value);
+                const team2Score = parseInt(document.getElementById('team2Score').value);
+                const status = document.getElementById('matchStatus').value;
+                
+                // Find the match
+                const match = tournamentData.matches.find(m => m.id === matchId);
+                
+                if (match) {
+                    // Update match data
+                    match.score1 = team1Score;
+                    match.score2 = team2Score;
+                    match.status = status;
+                    
+                    // Determine winner
+                    if (team1Score > team2Score) {
+                        match.winner = match.team1;
+                    } else if (team2Score > team1Score) {
+                        match.winner = match.team2;
+                    } else {
+                        match.winner = null; // Draw
+                    }
+                    
+                    // If this is a bracket match, update the bracket
+                    updateBracketWithMatchResult(match);
+                }
+                
+                // Update UI
+                loadMatchesForAdmin();
+                updateBracketView();
+                
+                // Hide form
+                scoreFormContainer.style.display = 'none';
+            });
+        }
+        
+        function loadMatchesForAdmin() {
+            const matchesTable = document.getElementById('matchesTable').querySelector('tbody');
+            matchesTable.innerHTML = '';
+            
+            if (tournamentData.matches.length === 0) {
+                matchesTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center;">No matches available. Generate a bracket to create matches.</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tournamentData.matches.forEach(match => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${match.id}</td>
+                    <td>${match.round}</td>
+                    <td>${match.team1 ? match.team1.name : 'TBD'} vs ${match.team2 ? match.team2.name : 'TBD'}</td>
+                    <td>${match.score1 !== null ? match.score1 : '-'} : ${match.score2 !== null ? match.score2 : '-'}</td>
+                    <td>
+                        <span class="status-${match.status || 'upcoming'}" style="padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
+                            ${match.status || 'Upcoming'}
+                        </span>
+                    </td>
+                    <td class="admin-table-actions">
+                        <button class="admin-icon-button edit edit-score-button" data-id="${match.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                `;
+                
+                matchesTable.appendChild(row);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.edit-score-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const matchId = e.target.closest('.edit-score-button').dataset.id;
+                    editScore(matchId);
+                });
+            });
+        }
+        
+        function editScore(matchId) {
+            const match = tournamentData.matches.find(m => m.id === matchId);
+            if (!match) return;
+            
+            // Set form data
+            const scoreForm = document.getElementById('scoreForm');
+            scoreForm.dataset.matchId = matchId;
+            
+            document.getElementById('matchTeams').textContent = `${match.team1 ? match.team1.name : 'TBD'} vs ${match.team2 ? match.team2.name : 'TBD'}`;
+            document.getElementById('team1Score').value = match.score1 !== null ? match.score1 : 0;
+            document.getElementById('team2Score').value = match.score2 !== null ? match.score2 : 0;
+            document.getElementById('matchStatus').value = match.status || 'upcoming';
+            
+            // Show form
+            document.getElementById('scoreFormContainer').style.display = 'block';
+        }
+        
+        function updateBracketWithMatchResult(match) {
+            // Find the match in the bracket
+            let bracketMatch = null;
+            let matchRound = 0;
+            let matchPosition = 0;
+            
+            if (tournamentData.bracket.rounds) {
+                for (let r = 0; r < tournamentData.bracket.rounds.length; r++) {
+                    const round = tournamentData.bracket.rounds[r];
+                    for (let m = 0; m < round.matches.length; m++) {
+                        const bMatch = round.matches[m];
+                        if (bMatch.id === match.id) {
+                            bracketMatch = bMatch;
+                            matchRound = r;
+                            matchPosition = bMatch.position || m + 1;
+                            break;
+                        }
+                    }
+                    if (bracketMatch) break;
+                }
+            }
+            
+            // If match is in bracket and completed, advance winner
+            if (bracketMatch && match.status === 'completed' && match.winner) {
+                bracketMatch.score1 = match.score1;
+                bracketMatch.score2 = match.score2;
+                bracketMatch.winner = match.winner;
+                
+                advanceTeamInBracket(match.winner, matchRound + 1, matchPosition, bracketMatch.bracket);
+            }
+            
+            // If match is in a group, update group standings
+            if (match.round === 'group' || match.round === 'robin') {
+                if (tournamentData.bracket.groups) {
+                    const group = tournamentData.bracket.groups[match.group || 0];
+                    if (group) {
+                        // Find the match in the group
+                        const groupMatch = group.matches.find(m => m.id === match.id);
+                        if (groupMatch) {
+                            groupMatch.score1 = match.score1;
+                            groupMatch.score2 = match.score2;
+                            groupMatch.winner = match.winner;
+                        }
+                    }
+                }
+            }
+        }
+        
+        function generateMatchesFromBracket() {
+            tournamentData.matches = [];
+            
+            // Generate matches from bracket rounds
+            if (tournamentData.bracket.rounds) {
+                tournamentData.bracket.rounds.forEach((round, roundIndex) => {
+                    round.matches.forEach((match, matchIndex) => {
+                        if (match.team1 || match.team2) {
+                            tournamentData.matches.push({
+                                id: match.id,
+                                team1: match.team1,
+                                team2: match.team2,
+                                score1: match.score1,
+                                score2: match.score2,
+                                winner: match.winner,
+                                round: round.name,
+                                status: 'upcoming',
+                                bracketRound: roundIndex + 1,
+                                bracketPosition: matchIndex + 1
+                            });
+                        }
+                    });
+                });
+            }
+            
+            // Generate matches from groups
+            if (tournamentData.bracket.groups) {
+                tournamentData.bracket.groups.forEach((group, groupIndex) => {
+                    group.matches.forEach((match, matchIndex) => {
+                        tournamentData.matches.push({
+                            id: match.id,
+                            team1: match.team1,
+                            team2: match.team2,
+                            score1: match.score1,
+                            score2: match.score2,
+                            winner: match.winner,
+                            round: `${group.name} Match`,
+                            status: 'upcoming',
+                            group: groupIndex
+                        });
+                    });
+                });
+            }
+        }
+
+        function saveTournamentData() {
+            localStorage.setItem('tournamentData', JSON.stringify(tournamentData));
+        }
+
+        function loadTournamentData() {
+            const savedData = localStorage.getItem('tournamentData');
+            if (savedData) {
+                tournamentData = JSON.parse(savedData);
+                updateBracketView();
+            }
+        }
+        
+        function initBrackets() {
+            const bracketDisplay = document.getElementById('bracket-display');
+            
+            // Display empty state initially
+            if (!bracketDisplay.innerHTML) {
+                bracketDisplay.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-diagram-project"></i>
+                        </div>
+                        <h3 class="empty-title">Brackets Not Available Yet</h3>
+                        <p class="empty-message">
+                            Tournament brackets will be published once registration closes and the tournament begins.
+                        </p>
+                    </div>
+                `;
+            }
+        }
+        
+        function loadBracketData() {
+            // If we already have bracket data, just update the view
+            if (tournamentData.bracket.rounds && tournamentData.bracket.rounds.length > 0) {
+                updateBracketView();
+                return;
+            }
+            
+            // Check if there's bracket data in the page
+            const bracketDisplay = document.getElementById('bracket-display');
+            if (bracketDisplay.querySelector('.empty-state')) {
+                // No bracket data yet, create a default single elimination bracket
+                tournamentData.bracket = {
+                    type: 'single-elimination',
+                    rounds: [],
+                    settings: {}
+                };
+            }
+        }
+        
+        function setupScrollListeners() {
+            // Monitor scroll for progress bar
             window.addEventListener('scroll', () => {
                 const scrollTop = window.scrollY;
                 const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -1628,23 +4345,12 @@
                     tabs.classList.remove('sticky');
                 }
             });
-            
-            // Initialize animation observers
-            const fadeObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        fadeObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-            
-            document.querySelectorAll('.animate-fade-up, .animate-fade-in').forEach(el => {
-                fadeObserver.observe(el);
-            });
-        });
+        }
+        
+        function loadTournamentData() {
+            // For now, we'll just use the data in the page
+            // In a real app, this would load from an API
+        }
         
         function hideLoading() {
             document.getElementById('loadingSpinner').style.display = 'none';
@@ -1654,13 +4360,21 @@
             document.getElementById('loadingSpinner').style.display = 'flex';
         }
         
-        function initializeBrackets() {
-            // This function would handle bracket initialization if available
-            // For now, we'll just implement a placeholder
-            const bracketElement = document.getElementById('bracket-display');
-            if (bracketElement) {
-                // Placeholder for actual bracket rendering logic
+        // Utility functions
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            
+            // While there remain elements to shuffle
+            while (currentIndex > 0) {
+                // Pick a remaining element
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                
+                // And swap it with the current element
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
+            
+            return array;
         }
     </script>
 </body>
